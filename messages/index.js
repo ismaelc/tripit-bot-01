@@ -7,7 +7,8 @@ https://docs.botframework.com/en-us/node/builder/overview/
 var builder = require("botbuilder");
 var botbuilder_azure = require("botbuilder-azure");
 var azure = require('azure-storage');
-var request = require('request');
+//var request = require('request');
+var luis = require('./luis_stub.js');
 
 var useEmulator = (process.env.NODE_ENV == 'development');
 
@@ -19,57 +20,50 @@ var connector = useEmulator ? new builder.ChatConnector() : new botbuilder_azure
 });
 
 var bot = new builder.UniversalBot(connector);
-var model = 'https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/b0c6e3f0-b160-4b8b-83d1-060f85469721?subscription-key=c3b92446504d44eab832c686944145d6&verbose=true' + '&r=' + Math.random().toString(36).substring(7);
+
+/*
 var recognizer = null;
 recognizer = new builder.LuisRecognizer(model);
 var intents = new builder.IntentDialog({ recognizers: [recognizer] });
+intents.matches('Greet', '/greeting');
+intents.matches('Login', '/login');
+intents.onDefault('/default');
+*/
 
 //bot.dialog('/', intents);
 bot.dialog('/', function(session) {
 
- 
-   request(model + '&q=' + session.message.text, function (error, response, body) {
-     if (!error && response.statusCode == 200) {
-       //console.log(body) // Show the HTML for the Google homepage.
-       session.send(body);
-     }
-   });
-    
-});
+    var message = session.message.text;
+    /*
+    request(model + '&q=' + session.message.text, function(error, response, body) {
+        if (!error && response.statusCode == 200) {
+            //console.log(body) // Show the HTML for the Google homepage.
+            session.send(body);
+        }
+    });
+    */
 
-intents.matches('Greet', '/greeting');
-intents.matches('Login', '/login');
-intents.onDefault('/default');
-
-bot.dialog('/greeting', function(session) {
-   //session.send('Hey'); 
-   //session.send('Greeting');
-   
-   request('http://www.google.com', function (error, response, body) {
-     if (!error && response.statusCode == 200) {
-       //console.log(body) // Show the HTML for the Google homepage.
-       session.send(session.message.text);
-     }
-   });
-   
+    luis.getIntent(message, function(err, response) {
+        session.send(response);
+    });
 });
 
 // Handle login intent from user
-bot.dialog('/login', function (session) {
-    var queuedMessage = { address: session.message.address, text: session.message.text };
+bot.dialog('/block_for_now', function(session) {
+    var queuedMessage = {
+        address: session.message.address,
+        text: session.message.text
+    };
     // add message to queue
-    //session.sendTyping();
-    //session.send('/test');
-    session.send('Login')
-    
-    /*
+    session.sendTyping();
+
     var queueSvc = azure.createQueueService(process.env.AzureWebJobsStorage);
-    queueSvc.createQueueIfNotExists('bot-queue', function(err, result, response){
-        if(!err){
+    queueSvc.createQueueIfNotExists('bot-queue', function(err, result, response) {
+        if (!err) {
             // Add the message to the queue
             var queueMessageBuffer = new Buffer(JSON.stringify(queuedMessage)).toString('base64');
-            queueSvc.createMessage('bot-queue', queueMessageBuffer, function(err, result, response){
-                if(!err){
+            queueSvc.createMessage('bot-queue', queueMessageBuffer, function(err, result, response) {
+                if (!err) {
                     // Message inserted
                     session.send('Your message (\'' + session.message.text + '\') has been added to a queue, and it will be sent back to you via a Function');
                 } else {
@@ -82,15 +76,11 @@ bot.dialog('/login', function (session) {
             session.send('There was an error creating your queue');
         }
     });
-    */
-});
 
-bot.dialog('/default', function(session) {
-  session.send('Default');  
 });
 
 // Intercept trigger event (ActivityTypes.Trigger)
-bot.on('trigger', function (message) {
+bot.on('trigger', function(message) {
     console.log('Triggered');
     // handle message from trigger function
     var queuedMessage = message.value;
@@ -135,9 +125,9 @@ if (useEmulator) {
     server.listen(3978, function() {
         console.log('test bot endpont at http://localhost:3978/api/messages');
     });
-    server.post('/api/messages', connector.listen());    
+    server.post('/api/messages', connector.listen());
 } else {
-    module.exports = { default: connector.listen() }
+    module.exports = {
+        default: connector.listen()
+    }
 }
-
-
