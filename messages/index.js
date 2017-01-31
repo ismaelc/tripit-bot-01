@@ -59,6 +59,7 @@ bot.dialog('/', function(session) {
                 break;
             case 'Debug':
                 db.getDatabase()
+                    .then(() => getCollection())
                     .then(() => {
                         //db.exit(`Completed successfully`);
                         session.send('Completed successfully');

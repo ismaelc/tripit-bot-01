@@ -128,7 +128,9 @@ function exit(message) {
 }
 
 exports.getDatabase = getDatabase;
+exports.getCollection = getCollection;
 
+/*
 if (process.env.NODE_ENV == 'development') {
     getDatabase()
         .then(() => {
@@ -138,3 +140,4 @@ if (process.env.NODE_ENV == 'development') {
             exit(`Completed with error ${JSON.stringify(error)}`)
         });
 }
+*/
