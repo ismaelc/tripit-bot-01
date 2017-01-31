@@ -44,7 +44,7 @@ bot.dialog('/', function(session) {
     */
 
     luis.getIntent(message, function(err, response) {
-        session.send(response);
+        session.send(response.topScoringIntent.intent);
     });
 });
 
