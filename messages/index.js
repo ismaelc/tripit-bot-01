@@ -9,6 +9,8 @@ var botbuilder_azure = require("botbuilder-azure");
 var azure = require('azure-storage');
 //var request = require('request');
 var luis = require('./luis_stub.js');
+//var utils = require('./utils.js');
+var db = require('./documentdb.js');
 
 var useEmulator = (process.env.NODE_ENV == 'development');
 
@@ -20,8 +22,9 @@ var connector = useEmulator ? new builder.ChatConnector() : new botbuilder_azure
 });
 
 var bot = new builder.UniversalBot(connector);
+var tripit_auth_url = 'https://tripit-auth.azurewebsites.net/';
 
-/*
+/* NOT WORKING - Returned intent seems to be cached on Azure Function
 var recognizer = null;
 recognizer = new builder.LuisRecognizer(model);
 var intents = new builder.IntentDialog({ recognizers: [recognizer] });
@@ -33,18 +36,40 @@ intents.onDefault('/default');
 //bot.dialog('/', intents);
 bot.dialog('/', function(session) {
 
-    var message = session.message.text;
-    /*
-    request(model + '&q=' + session.message.text, function(error, response, body) {
-        if (!error && response.statusCode == 200) {
-            //console.log(body) // Show the HTML for the Google homepage.
-            session.send(body);
-        }
-    });
-    */
+    var stateObject = {
+        address: session.message.address,
+        text: session.message.text
+    };
+    //var message = session.message.text;
 
-    luis.getIntent(message, function(err, response) {
-        session.send(response.topScoringIntent.intent);
+    luis.getIntent(session.message.text, function(err, response) {
+        var intent = response.topScoringIntent.intent;
+
+        switch (intent) {
+            case 'Login':
+                //TODO: Need to send this as PM
+                var stateObjectBuffer = new Buffer(JSON.stringify(stateObject)).toString('base64');
+                session.send('Click to login: ' + tripit_auth_url + 'auth/tripit?' + '&state=' + stateObjectBuffer);
+                break;
+            case 'Greet':
+                session.send('Greet');
+                break;
+            case 'Random':
+                session.send('Random');
+                break;
+            case 'Debug':
+                db.getDatabase()
+                    .then(() => {
+                        //db.exit(`Completed successfully`);
+                        session.send('Completed successfully');
+                    })
+                    .catch((error) => {
+                        //exit(`Completed with error ${JSON.stringify(error)}`)
+                        session.send('Completed eith error ${JSON.stringify(error)}');
+                    });
+                break;
+        }
+        //session.send(response.topScoringIntent.intent);
     });
 });
 
