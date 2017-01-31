@@ -105,7 +105,9 @@ function getCollection() {
         client.readCollection(collectionUrl, (err, result) => {
             if (err) {
                 if (err.code == HttpStatusCodes.NOTFOUND) {
-                    client.createCollection(databaseUrl, config.collection, { offerThroughput: 400 }, (err, created) => {
+                    client.createCollection(databaseUrl, config.collection, {
+                        offerThroughput: 400
+                    }, (err, created) => {
                         if (err) reject(err)
                         else resolve(created);
                     });
@@ -130,9 +132,10 @@ function exit(message) {
 exports.getDatabase = getDatabase;
 exports.getCollection = getCollection;
 
-/*
+
 if (process.env.NODE_ENV == 'development') {
     getDatabase()
+        .then(() => getCollection())
         .then(() => {
             exit(`Completed successfully`);
         })
@@ -140,4 +143,3 @@ if (process.env.NODE_ENV == 'development') {
             exit(`Completed with error ${JSON.stringify(error)}`)
         });
 }
-*/

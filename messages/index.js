@@ -59,14 +59,14 @@ bot.dialog('/', function(session) {
                 break;
             case 'Debug':
                 db.getDatabase()
-                    .then(() => getCollection())
+                    .then(() => db.getCollection())
                     .then(() => {
                         //db.exit(`Completed successfully`);
                         session.send('Completed successfully');
                     })
                     .catch((error) => {
                         //exit(`Completed with error ${JSON.stringify(error)}`)
-                        session.send('Completed eith error ${JSON.stringify(error)}');
+                        session.send('Completed with error ' + JSON.stringify(error));
                     });
                 break;
         }
