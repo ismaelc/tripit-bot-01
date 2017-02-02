@@ -69,40 +69,10 @@ bot.dialog('/', function(session) {
                         session.send('Completed with error ' + JSON.stringify(error));
                     });
                 break;
+
         }
         //session.send(response.topScoringIntent.intent);
     });
-});
-
-// Handle login intent from user
-bot.dialog('/block_for_now', function(session) {
-    var queuedMessage = {
-        address: session.message.address,
-        text: session.message.text
-    };
-    // add message to queue
-    session.sendTyping();
-
-    var queueSvc = azure.createQueueService(process.env.AzureWebJobsStorage);
-    queueSvc.createQueueIfNotExists('bot-queue', function(err, result, response) {
-        if (!err) {
-            // Add the message to the queue
-            var queueMessageBuffer = new Buffer(JSON.stringify(queuedMessage)).toString('base64');
-            queueSvc.createMessage('bot-queue', queueMessageBuffer, function(err, result, response) {
-                if (!err) {
-                    // Message inserted
-                    session.send('Your message (\'' + session.message.text + '\') has been added to a queue, and it will be sent back to you via a Function');
-                } else {
-                    // this should be a log for the dev, not a message to the user
-                    session.send('There was an error inserting your message into queue');
-                }
-            });
-        } else {
-            // this should be a log for the dev, not a message to the user
-            session.send('There was an error creating your queue');
-        }
-    });
-
 });
 
 // Intercept trigger event (ActivityTypes.Trigger)
@@ -143,6 +113,38 @@ bot.dialog('/', function (session) {
     });
 
 });
+
+// Handle login intent from user
+bot.dialog('/block_for_now', function(session) {
+    var queuedMessage = {
+        address: session.message.address,
+        text: session.message.text
+    };
+    // add message to queue
+    session.sendTyping();
+
+    var queueSvc = azure.createQueueService(process.env.AzureWebJobsStorage);
+    queueSvc.createQueueIfNotExists('bot-queue', function(err, result, response) {
+        if (!err) {
+            // Add the message to the queue
+            var queueMessageBuffer = new Buffer(JSON.stringify(queuedMessage)).toString('base64');
+            queueSvc.createMessage('bot-queue', queueMessageBuffer, function(err, result, response) {
+                if (!err) {
+                    // Message inserted
+                    session.send('Your message (\'' + session.message.text + '\') has been added to a queue, and it will be sent back to you via a Function');
+                } else {
+                    // this should be a log for the dev, not a message to the user
+                    session.send('There was an error inserting your message into queue');
+                }
+            });
+        } else {
+            // this should be a log for the dev, not a message to the user
+            session.send('There was an error creating your queue');
+        }
+    });
+
+});
+
 */
 
 if (useEmulator) {

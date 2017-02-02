@@ -10,6 +10,7 @@ config.collection = {
     "id": "Auth"
 };
 
+/*
 config.documents = {
     "Andersen": {
         "id": "Anderson.1",
@@ -66,7 +67,11 @@ config.documents = {
         "isRegistered": false
     }
 };
+*/
 
+config.documents = {
+    
+}
 var client = new documentClient(process.env.DB_ENDPOINT, {
     "masterKey": process.env.DB_PRIMARY_KEY
 });
@@ -121,6 +126,29 @@ function getCollection() {
     });
 }
 
+function getAuthDocument(document) {
+    let documentUrl = `${collectionUrl}/docs/${document.id}`;
+    console.log(`Getting document:\n${document.id}\n`);
+
+    return new Promise((resolve, reject) => {
+        //client.readDocument(documentUrl, { partitionKey: document.district }, (err, result) => {
+        client.readDocument(documentUrl, {}, (err, result) => {
+            if (err) {
+                if (err.code == HttpStatusCodes.NOTFOUND) {
+                    client.createDocument(collectionUrl, document, (err, created) => {
+                        if (err) reject(err)
+                        else resolve(created);
+                    });
+                } else {
+                    reject(err);
+                }
+            } else {
+                resolve(result);
+            }
+        });
+    });
+};
+
 function exit(message) {
     console.log(message);
     console.log('Press any key to exit');
@@ -131,6 +159,7 @@ function exit(message) {
 
 exports.getDatabase = getDatabase;
 exports.getCollection = getCollection;
+exports.getAuthDocuments = getAuthDocument;
 
 
 if (process.env.NODE_ENV == 'development') {
