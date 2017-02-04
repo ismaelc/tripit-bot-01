@@ -95,7 +95,9 @@ bot.on('trigger', function(message) {
     var queuedMessage = message.value;
 
     // Testing to see if this will remove the 'channel does not support...' error
-    delete queuedMessage.address.conversation;
+    // Becomes a PM to Slack when conversation is removed
+
+    if(queuedMessage.address.channel != 'webchat') delete queuedMessage.address.conversation;
 
     var reply = new builder.Message()
         .address(queuedMessage.address)
