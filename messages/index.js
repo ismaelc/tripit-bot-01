@@ -21,19 +21,6 @@ var connector = useEmulator ? new builder.ChatConnector() : new botbuilder_azure
     openIdMetadata: process.env['BotOpenIdMetadata']
 });
 
-if (useEmulator) {
-    var restify = require('restify');
-    var server = restify.createServer();
-    server.listen(3978, function() {
-        console.log('test bot endpont at http://localhost:3978/api/messages');
-    });
-    server.post('/api/messages', connector.listen());
-} else {
-    module.exports = {
-        default: connector.listen()
-    }
-}
-
 /*
 var bot = new builder.UniversalBot(connector, function(session) {
     session.endDialog('Hello there!');
@@ -122,6 +109,19 @@ bot.on('trigger', function(message) {
     });
     */
 });
+
+if (useEmulator) {
+    var restify = require('restify');
+    var server = restify.createServer();
+    server.listen(3978, function() {
+        console.log('test bot endpont at http://localhost:3978/api/messages');
+    });
+    server.post('/api/messages', connector.listen());
+} else {
+    module.exports = {
+        default: connector.listen()
+    }
+}
 
 /*
 bot.dialog('fromTrigger', [
