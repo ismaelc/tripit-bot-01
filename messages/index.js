@@ -93,11 +93,14 @@ bot.on('trigger', function(message) {
     console.log('Triggered');
     // handle message from trigger function
     var queuedMessage = message.value;
+
+    // Testing to see if this will remove the 'channel does not support...' error
+    delete queuedMessage.address.conversation;
+
     var reply = new builder.Message()
         .address(queuedMessage.address)
         .text('This is coming from the trigger: ' + queuedMessage.text);
     //bot.send(reply);
-
 
     bot.beginDialog(reply, 'fromTrigger', null, (err) => {
         if (err) {
