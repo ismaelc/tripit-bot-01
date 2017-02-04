@@ -100,8 +100,9 @@ bot.on('trigger', function(message) {
     var reply = new builder.Message()
         .address(queuedMessage.address)
         .text('This is coming from the trigger: ' + queuedMessage.text);
-    //bot.send(reply);
+        bot.send(reply);
 
+    /*
     bot.beginDialog(reply, 'fromTrigger', null, (err) => {
         if (err) {
             // error ocurred while starting new conversation. Channel not supported?
@@ -110,6 +111,7 @@ bot.on('trigger', function(message) {
                 .address(queuedMessage.address));
         }
     });
+    */
 
 });
 
