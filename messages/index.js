@@ -123,11 +123,13 @@ bot.on('trigger', function(message) {
     */
 });
 
+/*
 bot.dialog('fromTrigger', [
     function (session) {
         session.endDialog('End dialog');
     }
 ]);
+*/
 
 
 
