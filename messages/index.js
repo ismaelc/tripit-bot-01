@@ -10,7 +10,7 @@ var azure = require('azure-storage');
 //var request = require('request');
 var luis = require('./luis_stub.js');
 //var utils = require('./utils.js');
-var db = require('./documentdb.js');
+//var db = require('./documentdb.js');
 
 var useEmulator = (process.env.NODE_ENV == 'development');
 
@@ -20,6 +20,25 @@ var connector = useEmulator ? new builder.ChatConnector() : new botbuilder_azure
     stateEndpoint: process.env['BotStateEndpoint'],
     openIdMetadata: process.env['BotOpenIdMetadata']
 });
+
+if (useEmulator) {
+    var restify = require('restify');
+    var server = restify.createServer();
+    server.listen(3978, function() {
+        console.log('test bot endpont at http://localhost:3978/api/messages');
+    });
+    server.post('/api/messages', connector.listen());
+} else {
+    module.exports = {
+        default: connector.listen()
+    }
+}
+
+/*
+var bot = new builder.UniversalBot(connector, function(session) {
+    session.endDialog('Hello there!');
+});
+*/
 
 var bot = new builder.UniversalBot(connector);
 var tripit_auth_url = 'https://tripit-auth.azurewebsites.net/';
@@ -36,18 +55,22 @@ intents.onDefault('/default');
 //bot.dialog('/', intents);
 bot.dialog('/', function(session) {
 
+    // Save user's address so we can reply later,
+    // ... will be passed as state during authentication
     var stateObject = {
         address: session.message.address,
         text: session.message.text
     };
     //var message = session.message.text;
 
+    // Figure out what the user is trying to say
     luis.getIntent(session.message.text, function(err, response) {
         var intent = response.topScoringIntent.intent;
 
         switch (intent) {
             case 'Login':
                 //TODO: Need to send this as PM
+                // Package state along with the auth url
                 var stateObjectBuffer = new Buffer(JSON.stringify(stateObject)).toString('base64');
                 session.send('Click to login: ' + tripit_auth_url + 'auth/tripit?' + '&state=' + stateObjectBuffer);
                 break;
@@ -58,6 +81,8 @@ bot.dialog('/', function(session) {
                 session.send('Random');
                 break;
             case 'Debug':
+                session.send('Debug');
+                /*
                 db.getDatabase()
                     .then(() => db.getCollection())
                     .then(() => {
@@ -68,6 +93,7 @@ bot.dialog('/', function(session) {
                         //exit(`Completed with error ${JSON.stringify(error)}`)
                         session.send('Completed with error ' + JSON.stringify(error));
                     });
+                */
                 break;
 
         }
@@ -83,8 +109,25 @@ bot.on('trigger', function(message) {
     var reply = new builder.Message()
         .address(queuedMessage.address)
         .text('This is coming from the trigger: ' + queuedMessage.text);
-    bot.send(reply);
+    //bot.send(reply);
+
+    bot.beginDialog(reply, 'fromTrigger', null, (err) => {
+        if (err) {
+            // error ocurred while starting new conversation. Channel not supported?
+            bot.send(new builder.Message()
+                .text('This channel does not support this operation: ' + err.message)
+                .address(queuedMessage.address));
+        }
+    });
 });
+
+bot.dialog('fromTrigger', [
+    function (session) {
+        session.endDialog('End dialog');
+    }
+]);
+
+
 
 /*
 // Handle message from user
@@ -146,16 +189,3 @@ bot.dialog('/block_for_now', function(session) {
 });
 
 */
-
-if (useEmulator) {
-    var restify = require('restify');
-    var server = restify.createServer();
-    server.listen(3978, function() {
-        console.log('test bot endpont at http://localhost:3978/api/messages');
-    });
-    server.post('/api/messages', connector.listen());
-} else {
-    module.exports = {
-        default: connector.listen()
-    }
-}
