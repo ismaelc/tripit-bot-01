@@ -59,7 +59,8 @@ bot.dialog('/', function(session) {
                 //TODO: Need to send this as PM
                 // Package state along with the auth url
                 var stateObjectBuffer = new Buffer(JSON.stringify(stateObject)).toString('base64');
-                delete session.message.address.conversation;
+
+                if(session.message.address.channelId != 'webchat') delete session.message.address.conversation;
                 session.send('Click to login: ' + tripit_auth_url + 'auth/tripit?' + '&state=' + stateObjectBuffer);
                 break;
             case 'Greet':
