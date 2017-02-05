@@ -56,12 +56,19 @@ bot.dialog('/', function(session) {
 
         switch (intent) {
             case 'Login':
-                //TODO: Need to send this as PM
                 // Package state along with the auth url
-                var stateObjectBuffer = new Buffer(JSON.stringify(stateObject)).toString('base64');
 
-                if(session.message.address.channelId != 'webchat') delete session.message.address.conversation;
-                session.send('Click to login: ' + tripit_auth_url + 'auth/tripit?' + '&state=' + stateObjectBuffer);
+                if (session.message.address.channelId != 'webchat') delete session.message.address.conversation;
+
+                var stateObjectBuffer = new Buffer(JSON.stringify(stateObject)).toString('base64');
+                var card = new builder.SigninCard(session)
+                    .text('TripIt Sign-in')
+                    .button('Sign-in', tripit_auth_url + 'auth/tripit?' + '&state=' + stateObjectBuffer);
+
+                var msg = new builder.Message(session).addAttachment(card);
+                session.send(msg);
+
+                //session.send('Click to login: ' + tripit_auth_url + 'auth/tripit?' + '&state=' + stateObjectBuffer);
                 break;
             case 'Greet':
                 session.send('Greet');
@@ -99,12 +106,12 @@ bot.on('trigger', function(message) {
     // Testing to see if this will remove the 'channel does not support...' error
     // Becomes a PM to Slack when conversation is removed
 
-    if(queuedMessage.address.channelId != 'webchat') delete queuedMessage.address.conversation;
+    if (queuedMessage.address.channelId != 'webchat') delete queuedMessage.address.conversation;
 
     var reply = new builder.Message()
         .address(queuedMessage.address)
         .text('This is coming from the trigger: ' + queuedMessage.text);
-        bot.send(reply);
+    bot.send(reply);
 
     /*
     bot.beginDialog(reply, 'fromTrigger', null, (err) => {
@@ -120,7 +127,7 @@ bot.on('trigger', function(message) {
 });
 
 bot.dialog('fromTrigger', [
-    function (session) {
+    function(session) {
         session.endDialog('End dialog');
     }
 ]);
