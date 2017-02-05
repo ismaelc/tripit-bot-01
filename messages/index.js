@@ -11,6 +11,7 @@ var azure = require('azure-storage');
 var luis = require('./luis_stub.js');
 var utils = require('./utils.js');
 //var db = require('./documentdb.js');
+var tripit = require('./tripit.js');
 
 var useEmulator = (process.env.NODE_ENV == 'development');
 
@@ -106,10 +107,35 @@ bot.on('trigger', function(message) {
     // Becomes a PM to Slack when .conversation is removed
     if (queuedMessage.address.channelId != 'webchat') delete queuedMessage.address.conversation;
 
+    // TODO: Test on login when these params are missing
+    if(typeof queuedMessage.text.notification === 'undefined') {}
+    // Below means we're getting notification from TripIt Webhook function
+    // .. and not internally e.g. login
+    else {
+        var auth = queuedMessage.text.auth;
+        var notification = queuedMessage.text.notification;
+
+        tripit.getTrip(auth.token, auth.tokenSecret, notification.id)
+        .then((trip) => {
+            // Construct message to send to the channel
+            var reply = new builder.Message()
+                .address(queuedMessage.address)
+                .text('This is coming from the trigger: ' + JSON.stringify(trip));
+
+            // Send it to the channel
+            bot.send(reply);            
+        })
+        .catch((error) => {
+            bot.send('Error: ' + error)
+        });
+
+    }
+
+    /*
     // Construct message to send to the channel
     var reply = new builder.Message()
         .address(queuedMessage.address)
-        .text('This is coming from the trigger: ' + JSON.stringify(queuedMessage.text));
+        .text('This is coming from the trigger: ' + queuedMessage.text);
 
     // Send it to the channel
     bot.send(reply);

@@ -13,16 +13,19 @@ var tripit_oauth = new OAuth(
     "HMAC-SHA1"
 );
 
-function getTrip(id) {
-    tripit_oauth.get(
-        //'https://api.tripit.com/v1/list/trip?format=json', // try trips for testing only
-        'https://api.tripit.com/v1/get/trip/id/21765621/format/json',
-        token, //test user token
-        tokenSecret, //test user secret
-        function(e, data, _res) {
-
-        }
-    )
+function getTrip(token, tokenSecret, id) {
+    return new Promise((resolve, reject) => {
+        tripit_oauth.get(
+            //'https://api.tripit.com/v1/list/trip?format=json', // try trips for testing only
+            'https://api.tripit.com/v1/get/trip/id/' + id + '/format/json',
+            token, //test user token
+            tokenSecret, //test user secret
+            (e, data, _res) => {
+                if(e) reject(e);
+                else resolve(data);
+            }
+        )
+    });
 }
 
 exports.getTrip = getTrip;
