@@ -9,7 +9,7 @@ var botbuilder_azure = require("botbuilder-azure");
 var azure = require('azure-storage');
 //var request = require('request');
 var luis = require('./luis_stub.js');
-//var utils = require('./utils.js');
+var utils = require('./utils.js');
 //var db = require('./documentdb.js');
 
 var useEmulator = (process.env.NODE_ENV == 'development');
@@ -100,20 +100,21 @@ bot.dialog('/', function(session) {
 // Intercept trigger event (ActivityTypes.Trigger)
 bot.on('trigger', function(message) {
     console.log('Triggered');
-    // handle message from trigger function
+    // Handle message from trigger function
     var queuedMessage = message.value;
 
-    // Testing to see if this will remove the 'channel does not support...' error
-    // Becomes a PM to Slack when conversation is removed
-
+    // Becomes a PM to Slack when .conversation is removed
     if (queuedMessage.address.channelId != 'webchat') delete queuedMessage.address.conversation;
 
+    // Construct message to send to the channel
     var reply = new builder.Message()
         .address(queuedMessage.address)
-        .text('This is coming from the trigger: ' + queuedMessage.text);
+        .text('This is coming from the trigger: ' + JSON.stringify(queuedMessage.text));
+
+    // Send it to the channel
     bot.send(reply);
 
-    /*
+    /* Was testing to see if this will work, nope it didn't
     bot.beginDialog(reply, 'fromTrigger', null, (err) => {
         if (err) {
             // error ocurred while starting new conversation. Channel not supported?
@@ -126,17 +127,11 @@ bot.on('trigger', function(message) {
 
 });
 
-bot.dialog('fromTrigger', [
-    function(session) {
-        session.endDialog('End dialog');
-    }
-]);
-
 if (useEmulator) {
     var restify = require('restify');
     var server = restify.createServer();
     server.listen(3978, function() {
-        console.log('test bot endpont at http://localhost:3978/api/messages');
+        console.log('test bot endpoint at http://localhost:3978/api/messages');
     });
     server.post('/api/messages', connector.listen());
 } else {
