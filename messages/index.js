@@ -115,7 +115,7 @@ bot.on('trigger', function(message) {
         var auth = queuedMessage.text.auth;
         var notification = queuedMessage.text.notification;
 
-        tripit.getTrip(auth.token, auth.tokenSecret, notification.id)
+        tripit.getTrip(auth.tripit_token, auth.tripit_tokenSecret, notification.tripit_id)
         .then((trip) => {
             // Construct message to send to the channel
             var reply = new builder.Message()
@@ -123,7 +123,7 @@ bot.on('trigger', function(message) {
                 .text('This is coming from the trigger: ' + JSON.stringify(trip));
 
             // Send it to the channel
-            bot.send(reply);            
+            bot.send(reply);
         })
         .catch((error) => {
             bot.send('Error: ' + error)
