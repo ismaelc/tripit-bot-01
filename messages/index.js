@@ -130,7 +130,9 @@ bot.on('trigger', function(message) {
     if (queuedMessage.address.channelId != 'webchat') delete queuedMessage.address.conversation;
 
     // TODO: Test on login when these params are missing
-    if (typeof queuedMessage.text.notification === 'undefined') {
+    var payload = JSON.parse(queuedMessage.text);
+
+    if (typeof payload.notification === 'undefined') {
         // Below means we're getting notification from TripIt Webhook function
         // .. and not internally e.g. login
         var reply = new builder.Message()
@@ -140,8 +142,8 @@ bot.on('trigger', function(message) {
         // Send it to the channel
         bot.send(reply);
     } else {
-        var auth = queuedMessage.text.auth;
-        var notification = queuedMessage.text.notification;
+        var auth = payload.auth;
+        var notification = payload.notification;
 
         //bot.send('Notification: ' + JSON.stringify(notification));
 
