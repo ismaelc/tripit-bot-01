@@ -108,26 +108,34 @@ bot.on('trigger', function(message) {
     if (queuedMessage.address.channelId != 'webchat') delete queuedMessage.address.conversation;
 
     // TODO: Test on login when these params are missing
-    if(typeof queuedMessage.text.notification === 'undefined') {}
-    // Below means we're getting notification from TripIt Webhook function
-    // .. and not internally e.g. login
-    else {
+    if (typeof queuedMessage.text.notification === 'undefined') {
+        // Below means we're getting notification from TripIt Webhook function
+        // .. and not internally e.g. login
+        var reply = new builder.Message()
+            .address(queuedMessage.address)
+            .text('This is coming from the trigger: ' + queuedMessage.text);
+
+        // Send it to the channel
+        bot.send(reply);
+    } else {
         var auth = queuedMessage.text.auth;
         var notification = queuedMessage.text.notification;
 
         tripit.getTrip(auth.tripit_token, auth.tripit_tokenSecret, notification.tripit_id)
-        .then((trip) => {
-            // Construct message to send to the channel
-            var reply = new builder.Message()
-                .address(queuedMessage.address)
-                .text('This is coming from the trigger: ' + JSON.stringify(trip));
+            .then((trip) => {
+                // Construct message to send to the channel
+                var reply = new builder.Message()
+                    .address(queuedMessage.address)
+                    .text('This is coming from the trigger: ' + JSON.stringify(trip));
 
-            // Send it to the channel
-            bot.send(reply);
-        })
-        .catch((error) => {
-            bot.send('Error: ' + error)
-        });
+
+
+                // Send it to the channel
+                bot.send(reply);
+            })
+            .catch((error) => {
+                bot.send('Error: ' + error)
+            });
 
     }
 
