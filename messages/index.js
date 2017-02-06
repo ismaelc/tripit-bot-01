@@ -113,7 +113,7 @@ bot.on('trigger', function(message) {
         // .. and not internally e.g. login
         var reply = new builder.Message()
             .address(queuedMessage.address)
-            .text('This is coming from the trigger: ' + queuedMessage.text);
+            .text('This is coming from the trigger: ' + JSON.stringify(message));
 
         // Send it to the channel
         bot.send(reply);
