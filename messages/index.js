@@ -152,7 +152,6 @@ bot.on('trigger', function(message) {
                     .text('This is coming from the trigger: ' + JSON.stringify(trip));
                 */
 
-
                 var card = new builder.ThumbnailCard()
                         .title('Your trip was ' + notification.tripit_changed)
                         .subtitle('Your trip to ' + trip.Trip.primary_location + ' has been ' + notification.tripit_changed)
