@@ -92,9 +92,24 @@ bot.dialog('/', function(session) {
                     });
                 */
 
+                /*
                 var card = new builder.SigninCard()
                     .text('Debug')
                     .button('Debug button', tripit_auth_url + 'auth/tripit?' + '&state=' + stateObjectBuffer);
+
+                var msg = new builder.Message().addAttachment(card);
+                */
+
+                var card = new builder.ThumbnailCard()
+                        .title('BotFramework Thumbnail Card')
+                        .subtitle('Your bots — wherever your users are talking')
+                        .text('Build and connect intelligent bots to interact with your users naturally wherever they are, from text/sms to Skype, Slack, Office 365 mail and other popular services.')
+                        .images([
+                            builder.CardImage.create(null, 'https://sec.ch9.ms/ch9/7ff5/e07cfef0-aa3b-40bb-9baa-7c9ef8ff7ff5/buildreactionbotframework_960.jpg')
+                        ])
+                        .buttons([
+                            builder.CardAction.openUrl(null, 'https://docs.botframework.com/en-us/', 'Get Started')
+                        ]);
 
                 var msg = new builder.Message().addAttachment(card);
                 session.send(msg);
@@ -137,23 +152,22 @@ bot.on('trigger', function(message) {
                     .text('This is coming from the trigger: ' + JSON.stringify(trip));
                 */
 
-                /*
+
                 var card = new builder.ThumbnailCard()
-                        .title('BotFramework Thumbnail Card')
-                        .subtitle('Your bots — wherever your users are talking')
-                        .text('Build and connect intelligent bots to interact with your users naturally wherever they are, from text/sms to Skype, Slack, Office 365 mail and other popular services.')
+                        .title('Your trip was ' + notification.tripit_changed)
+                        .subtitle('Your trip to ' + trip.Trip.primary_location + ' has been ' + notification.tripit_changed)
+                        .text('<Insert useful text here>')
                         .images([
-                            builder.CardImage.create(session, 'https://sec.ch9.ms/ch9/7ff5/e07cfef0-aa3b-40bb-9baa-7c9ef8ff7ff5/buildreactionbotframework_960.jpg')
+                            builder.CardImage.create(null, trip.Trip.image_url)
                         ])
                         .buttons([
-                            builder.CardAction.openUrl(session, 'https://docs.botframework.com/en-us/', 'Get Started')
+                            builder.CardAction.openUrl(null, 'https://docs.botframework.com/en-us/', 'View in TripIt')
                         ]);
 
-                var msg = new builder.Message(session).addAttachment(card);
+                var msg = new builder.Message().addAttachment(card);
                 // Send it to the channel
                 bot.send(msg);
-                */
-                bot.send(JSON.stringify(message));
+                //bot.send(JSON.stringify(message));
             })
             .catch((error) => {
                 bot.send('Error: ' + error)
