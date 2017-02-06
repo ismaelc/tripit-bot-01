@@ -91,6 +91,13 @@ bot.dialog('/', function(session) {
                         session.send('Completed with error ' + JSON.stringify(error));
                     });
                 */
+
+                var card = new builder.SigninCard()
+                    .text('Debug')
+                    .button('Debug button', tripit_auth_url + 'auth/tripit?' + '&state=' + stateObjectBuffer);
+
+                var msg = new builder.Message().addAttachment(card);
+                session.send(msg);
                 break;
 
         }
