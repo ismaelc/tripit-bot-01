@@ -75,7 +75,15 @@ bot.dialog('/', function(session) {
                 session.send('Greet');
                 break;
             case 'GetTrips':
-                session.send('Get Trips');
+                //session.send('Get Trips');
+                var address = session.message.address;
+                var id = address.user.id;
+                var name = address.user.name;
+                var channelId = address.channelId;
+                var serviceUrl = address.serviceUrl;
+                tripit.getCreds(id, name, channelId, serviceUrl)
+                .then((credArr) => session.send(credArr[0]))
+                .catch((error) => session.send(error))
                 break;
             case 'Random':
                 session.send('Random');
@@ -108,7 +116,7 @@ bot.on('trigger', function(message) {
         //bot.send('Notification: ' + JSON.stringify(notification));
 
         tripit.getTrip(auth.tripit_token, auth.tripit_tokenSecret, notification.tripit_id)
-            .then((trip_) => {
+            .then((_trip) => {
                 // Construct message to send to the channel
 
                 //var reply = new builder.Message()
@@ -123,7 +131,7 @@ bot.on('trigger', function(message) {
                 // Send it to the channel
                 bot.send(reply);
                 */
-                var trip = JSON.parse(trip_);
+                var trip = JSON.parse(_trip);
 
                 var card = new builder.ThumbnailCard()
                         .title('TripIt Alert')

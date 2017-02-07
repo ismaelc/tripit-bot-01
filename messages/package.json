@@ -10,7 +10,8 @@
     "request": "2.71.0",
     "documentdb": "1.10.2",
     "url": "0.11.0",
-    "oauth": "0.9.15"
+    "oauth": "0.9.15",
+    "uuid": "3.0.1"
   },
   "devDependencies": {
       "restify": "^4.1.1"
