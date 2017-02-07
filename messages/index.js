@@ -86,7 +86,7 @@ bot.dialog('/', function(session) {
                 .then((credArr) => session.send(credArr[0]))
                 .catch((error) => session.send(error))
                 */
-                session.send('Address: ' + JSON.stringify(address));
+                session.send('Address: ' + id + ' ' + name + ' ' + channelId + ' ' + serviceUrl);
                 break;
             case 'Random':
                 session.send('Random');
