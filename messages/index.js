@@ -67,8 +67,8 @@ bot.dialog('/', function(session) {
                     .button('Sign-in', tripit_auth_url + 'auth/tripit?' + '&state=' + stateObjectBuffer);
 
                 var msg = new builder.Message(session).addAttachment(card);
-                session.send(msg);
-
+                //session.send(msg);
+                session.send(JSON.stringify(stateObject));
                 //session.send('Click to login: ' + tripit_auth_url + 'auth/tripit?' + '&state=' + stateObjectBuffer);
                 break;
             case 'Greet':
@@ -181,7 +181,7 @@ bot.on('trigger', function(message) {
     }
     */
 
-    
+
     // Construct message to send to the channel
     var reply = new builder.Message()
         .address(queuedMessage.address)
