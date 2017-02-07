@@ -160,14 +160,14 @@ bot.on('trigger', function(message) {
                 var trip = JSON.parse(trip_);
 
                 var card = new builder.ThumbnailCard()
-                        .title('Your trip to ' + trip.Trip.primary_location + ' has been ' + notification.tripit_change)
+                        .title('TripIt Alert')
                         .subtitle('Trip date: ' + trip.Trip.start_date)
-                        .text('<Insert useful text here>')
+                        .text('Your trip to ' + trip.Trip.primary_location + ' has been ' + notification.tripit_change)
                         .images([
                             builder.CardImage.create(null, trip.Trip.image_url)
                         ])
                         .buttons([
-                            builder.CardAction.openUrl(null, 'https://docs.botframework.com/en-us/', 'View in TripIt')
+                            builder.CardAction.openUrl(null, 'https://www.tripit.com/trip/show/id/' + notification.tripit_id, 'View in TripIt')
                         ]);
 
                 var msg = new builder.Message()
