@@ -177,7 +177,7 @@ bot.on('trigger', function(message) {
             .catch((error) => {
                 bot.send('Error: ' + error)
             });
-        */
+        
         // Below means we're getting notification from TripIt Webhook function
         // .. and not internally e.g. login
 
