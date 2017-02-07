@@ -43,96 +43,106 @@ intents.onDefault('/default');
 //bot.dialog('/', intents);
 bot.dialog('/', function(session) {
 
-    // Save user's address so we can reply later,
-    // ... will be passed as state during authentication
-    var stateObject = {
-        address: session.message.address,
-        text: session.message.text
-    };
-    //var message = session.message.text;
+    // Check if this is a 'conversation' and if tripit was mentioned
+    // Ignore chat if it's in a channel/group and 'tripit' was NOT
+    if ((typeof session.message.address.conversation.name !== 'undefined') && (session.message.text.toLowerCase().indexOf('tripit') == -1)) {
+        //session.send('Match')
+        console.log('<Chat ignored>: ' + JSON.stringify(session.message.address.conversation));
+        session.endDialog();
+    } else {
+        console.log('Went here');
+        // Save user's address so we can reply later,
+        // ... will be passed as state during authentication
+        var stateObject = {
+            address: session.message.address,
+            text: session.message.text
+        };
+        //var message = session.message.text;
 
-    // Figure out what the user is trying to say
-    luis.getIntent(session.message.text, function(err, response) {
-        var intent = response.topScoringIntent.intent;
+        // Figure out what the user is trying to say
+        luis.getIntent(session.message.text, function(err, response) {
+            var intent = response.topScoringIntent.intent;
 
-        switch (intent) {
-            case 'Login':
-                // Package state along with the auth url
+            switch (intent) {
+                case 'Login':
+                    // Package state along with the auth url
+                    console.log('... to Login intent');
+                    var stateObjectBuffer = new Buffer(JSON.stringify(stateObject)).toString('base64');
+                    var card = new builder.SigninCard(session)
+                        .text('TripIt Sign-in')
+                        .button('Sign-in', tripit_auth_url + 'auth/tripit?' + '&state=' + stateObjectBuffer);
 
-                var stateObjectBuffer = new Buffer(JSON.stringify(stateObject)).toString('base64');
-                var card = new builder.SigninCard(session)
-                    .text('TripIt Sign-in')
-                    .button('Sign-in', tripit_auth_url + 'auth/tripit?' + '&state=' + stateObjectBuffer);
+                    var msg = new builder.Message(session).addAttachment(card);
 
-                var msg = new builder.Message(session).addAttachment(card);
+                    if ((typeof session.message.address.channelId === 'undefined') && (session.message.address.channelId != 'webchat')) delete session.message.address.conversation;
 
-                if (session.message.address.channelId != 'webchat') delete session.message.address.conversation;
-                session.send(msg);
-                //session.send(JSON.stringify(stateObject));
-                //session.send('Click to login: ' + tripit_auth_url + 'auth/tripit?' + '&state=' + stateObjectBuffer);
-                break;
-            case 'Greet':
-                session.send('Greet');
-                break;
-            case 'GetTrips':
-                //session.send('Get Trips');
+                    session.send(msg);
+                    //session.send(JSON.stringify(stateObject));
+                    //session.send('Click to login: ' + tripit_auth_url + 'auth/tripit?' + '&state=' + stateObjectBuffer);
+                    break;
+                case 'Greet':
+                    session.send('Greet');
+                    break;
+                case 'GetTrips':
+                    //session.send('Get Trips');
 
-                var address = session.message.address;
-                var id = address.user.id;
-                var name = address.user.name;
-                var channelId = address.channelId;
-                var serviceUrl = address.serviceUrl;
+                    var address = session.message.address;
+                    var id = address.user.id;
+                    var name = address.user.name;
+                    var channelId = address.channelId;
+                    var serviceUrl = address.serviceUrl;
 
-                tripit.getCreds(id, name, channelId, serviceUrl)
-                    .then((credArr) => {
-                        //session.send(JSON.stringify(credArr[0]));
-                        session.userData.tripit_auth = credArr[0].tripit_auth;
-                    })
-                    .then(() => {
-                        return tripit.listTrips(session.userData.tripit_auth.tripit_token, session.userData.tripit_auth.tripit_tokenSecret);
-                    })
-                    .then((listArr) => {
-                        var trips = JSON.parse(listArr).Trip;
-                        var cards = [];
-                        for (var i = 0, len = trips.length; i < len; i++) {
-                            var card = new builder.ThumbnailCard(session)
-                                .title('Trip name: ' + trips[i].display_name)
-                                .subtitle(trips[i].start_date + ' - ' + trips[i].primary_location) //trips[i].start_date + ' - ' + trips[i].primary_location)
-                                .text('Your trip to ' + trips[i].primary_location + ' from ' + trips[i].start_date + ' to ' + trips[i].end_date) //+ trips[i].primary_location + ' from ' + trips[i].start_date + ' to ' + trips[i].end_date)
-                                .images([
-                                    builder.CardImage.create(session, trips[i].image_url) //trips[i].image_url)
-                                ])
-                                .buttons([
-                                    builder.CardAction.openUrl(session, 'https://www.tripit.com/trip/show/id/' + trips[i].id, 'View in TripIt') //https://www.tripit.com/trip/show/id/' + trips[i].id, 'View in TripIt')
-                                ]);
-                            cards.push(card);
-                        }
+                    tripit.getCreds(id, name, channelId, serviceUrl)
+                        .then((credArr) => {
+                            //session.send(JSON.stringify(credArr[0]));
+                            session.userData.tripit_auth = credArr[0].tripit_auth;
+                        })
+                        .then(() => {
+                            return tripit.listTrips(session.userData.tripit_auth.tripit_token, session.userData.tripit_auth.tripit_tokenSecret);
+                        })
+                        .then((listArr) => {
+                            var trips = JSON.parse(listArr).Trip;
+                            var cards = [];
+                            for (var i = 0, len = trips.length; i < len; i++) {
+                                var card = new builder.ThumbnailCard(session)
+                                    .title('Trip name: ' + trips[i].display_name)
+                                    .subtitle(trips[i].start_date + ' - ' + trips[i].primary_location) //trips[i].start_date + ' - ' + trips[i].primary_location)
+                                    .text('Your trip to ' + trips[i].primary_location + ' from ' + trips[i].start_date + ' to ' + trips[i].end_date) //+ trips[i].primary_location + ' from ' + trips[i].start_date + ' to ' + trips[i].end_date)
+                                    .images([
+                                        builder.CardImage.create(session, trips[i].image_url) //trips[i].image_url)
+                                    ])
+                                    .buttons([
+                                        builder.CardAction.openUrl(session, 'https://www.tripit.com/trip/show/id/' + trips[i].id, 'View in TripIt') //https://www.tripit.com/trip/show/id/' + trips[i].id, 'View in TripIt')
+                                    ]);
+                                cards.push(card);
+                            }
 
-                        // create reply with Carousel AttachmentLayout
-                        var reply = new builder.Message(session)
-                            .attachmentLayout(builder.AttachmentLayout.carousel)
-                            .attachments(cards);
+                            // create reply with Carousel AttachmentLayout
+                            var reply = new builder.Message(session)
+                                .attachmentLayout(builder.AttachmentLayout.carousel)
+                                .attachments(cards);
 
-                        session.send(reply);
+                            session.send(reply);
 
-                        //session.send('Trips: ' + trips);
-                    })
-                    .catch((error) => {
-                        session.send(JSON.stringify(error));
-                    });
+                            //session.send('Trips: ' + trips);
+                        })
+                        .catch((error) => {
+                            session.send(JSON.stringify(error));
+                        });
 
-                //session.send('Address: ' + id + ' ' + name + ' ' + channelId + ' ' + serviceUrl);
-                break;
-            case 'Random':
-                session.send('Random');
-                break;
-            case 'Debug':
-                session.send('Debug');
-                break;
+                    //session.send('Address: ' + id + ' ' + name + ' ' + channelId + ' ' + serviceUrl);
+                    break;
+                case 'Random':
+                    session.send('Random');
+                    break;
+                case 'Debug':
+                    session.send('Debug');
+                    break;
 
-        }
-        //session.send(response.topScoringIntent.intent);
-    });
+            }
+            //session.send(response.topScoringIntent.intent);
+        });
+    }
 });
 
 // Intercept trigger event (ActivityTypes.Trigger)
