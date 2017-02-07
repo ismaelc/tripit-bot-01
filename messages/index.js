@@ -92,7 +92,7 @@ bot.dialog('/', function(session) {
                     return tripit.listTrips(session.userData.tripit_auth.tripit_token, session.userData.tripit_auth.tripit_tokenSecret);
                 })
                 .then((listArr) => {
-                    session.send('Trips: ' + listArr);
+                    session.send('Trips: ' + listArr.Trip[0]);
                 })
                 .catch((error) => {
                     session.send(JSON.stringify(error));
