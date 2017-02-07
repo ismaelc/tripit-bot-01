@@ -57,7 +57,7 @@ bot.dialog('/', function(session) {
 
         switch (intent) {
             case 'Login':
-                // Package state along with the auth url        
+                // Package state along with the auth url
 
                 var stateObjectBuffer = new Buffer(JSON.stringify(stateObject)).toString('base64');
                 var card = new builder.SigninCard(session)
@@ -73,6 +73,9 @@ bot.dialog('/', function(session) {
                 break;
             case 'Greet':
                 session.send('Greet');
+                break;
+            case 'GetTrips':
+                session.send('Get Trips');
                 break;
             case 'Random':
                 session.send('Random');
