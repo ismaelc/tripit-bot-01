@@ -160,17 +160,19 @@ bot.on('trigger', function(message) {
 
 
                 var card = new builder.ThumbnailCard()
-                        .title('Your trip was ' + notification.tripit_changed)
-                        .subtitle('Your trip to ' + trip.Trip.primary_location + ' has been ' + notification.tripit_changed)
+                        .title('title')
+                        .subtitle('subtitle')
                         .text('<Insert useful text here>')
                         .images([
-                            builder.CardImage.create(null, trip.Trip.image_url)
+                            builder.CardImage.create(null, '')
                         ])
                         .buttons([
                             builder.CardAction.openUrl(null, 'https://docs.botframework.com/en-us/', 'View in TripIt')
                         ]);
 
-                var msg = new builder.Message().addAttachment(card).address(queuedMessage.address);
+                var msg = new builder.Message()
+                    .address(queuedMessage.address)
+                    .addAttachment(card);
                 // Send it to the channel
                 bot.send(msg);
                 //bot.send(JSON.stringify(message));
