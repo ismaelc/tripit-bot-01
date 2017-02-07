@@ -57,9 +57,7 @@ bot.dialog('/', function(session) {
 
         switch (intent) {
             case 'Login':
-                // Package state along with the auth url
-
-                //if (session.message.address.channelId != 'webchat') delete session.message.address.conversation;
+                // Package state along with the auth url        
 
                 var stateObjectBuffer = new Buffer(JSON.stringify(stateObject)).toString('base64');
                 var card = new builder.SigninCard(session)
@@ -67,6 +65,8 @@ bot.dialog('/', function(session) {
                     .button('Sign-in', tripit_auth_url + 'auth/tripit?' + '&state=' + stateObjectBuffer);
 
                 var msg = new builder.Message(session).addAttachment(card);
+
+                if (session.message.address.channelId != 'webchat') delete session.message.address.conversation;
                 session.send(msg);
                 //session.send(JSON.stringify(stateObject));
                 //session.send('Click to login: ' + tripit_auth_url + 'auth/tripit?' + '&state=' + stateObjectBuffer);
