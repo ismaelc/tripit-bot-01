@@ -141,7 +141,7 @@ bot.on('trigger', function(message) {
 
 
         tripit.getTrip(auth.tripit_token, auth.tripit_tokenSecret, notification.tripit_id)
-            .then((trip) => {
+            .then((trip_) => {
                 // Construct message to send to the channel
 
 
@@ -157,7 +157,7 @@ bot.on('trigger', function(message) {
                 // Send it to the channel
                 bot.send(reply);
                 */
-
+                var trip = JSON.parse(trip_);
 
                 var card = new builder.ThumbnailCard()
                         .title('Your trip to ' + trip.Trip.primary_location)

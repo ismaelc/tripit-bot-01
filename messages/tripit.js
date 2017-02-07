@@ -15,7 +15,7 @@ var tripit_oauth = new OAuth(
 
 /*
 getTrip('f2b424e252913d3b79cd2aa752b6cffa386d2e75','41ba34a9b90a53b9ccc4b7c46c4dbb5f3b6b781a','190219167')
-.then((trip) => console.log(trip))
+.then((trip) => console.log(JSON.parse(trip).Trip))
 .catch((error) => console.log(error));
 */
 
