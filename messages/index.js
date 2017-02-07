@@ -177,7 +177,6 @@ bot.on('trigger', function(message) {
             .catch((error) => {
                 bot.send('Error: ' + error)
             });
-
     }
     */
 
