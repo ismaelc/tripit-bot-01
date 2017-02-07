@@ -13,6 +13,12 @@ var tripit_oauth = new OAuth(
     "HMAC-SHA1"
 );
 
+/*
+getTrip('f2b424e252913d3b79cd2aa752b6cffa386d2e75','41ba34a9b90a53b9ccc4b7c46c4dbb5f3b6b781a','190219167')
+.then((trip) => console.log(trip))
+.catch((error) => console.log(error));
+*/
+
 function getTrip(token, tokenSecret, id) {
     return new Promise((resolve, reject) => {
         tripit_oauth.get(
