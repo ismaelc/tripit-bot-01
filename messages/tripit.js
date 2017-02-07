@@ -20,6 +20,12 @@ getTrip('f2b424e252913d3b79cd2aa752b6cffa386d2e75','41ba34a9b90a53b9ccc4b7c46c4d
 .catch((error) => console.log(error));
 */
 
+/*
+getCreds('U050C6MM6:T050C0DQU','ismaelc','slack','https://slack.botframework.com')
+.then((credArr) => console.log('Cred: ' + JSON.stringify(credArr[0])))
+.catch((error) => console.log(error))
+*/
+
 function getCreds(id, name, channelId, serviceUrl) {
     return new Promise((resolve, reject) => {
         db.getDatabase()

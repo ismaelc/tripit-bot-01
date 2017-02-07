@@ -81,12 +81,16 @@ bot.dialog('/', function(session) {
                 var name = address.user.name;
                 var channelId = address.channelId;
                 var serviceUrl = address.serviceUrl;
-                /*
+
                 tripit.getCreds(id, name, channelId, serviceUrl)
-                .then((credArr) => session.send(credArr[0]))
-                .catch((error) => session.send(error))
-                */
-                session.send('Address: ' + id + ' ' + name + ' ' + channelId + ' ' + serviceUrl);
+                .then((credArr) => {
+                    session.send(JSON.stringify(credArr[0]));
+                })
+                .catch((error) => {
+                    session.send(JSON.stringify(error));
+                });
+
+                //session.send('Address: ' + id + ' ' + name + ' ' + channelId + ' ' + serviceUrl);
                 break;
             case 'Random':
                 session.send('Random');
