@@ -97,13 +97,13 @@ bot.dialog('/', function(session) {
                         for (var i = 0, len = trips.length; i < len; i++) {
                             var card = new builder.ThumbnailCard(session)
                                 .title('Trip name: ' + trips[i].display_name)
-                                .subtitle(trips[i].start_date + ' - ' + trips[i].primary_location)
-                                .text('Your trip to ' + trips[i].primary_location + ' from ' + trips[i].start_date + ' to ' + trips[i].end_date)
+                                .subtitle('subtitle') //trips[i].start_date + ' - ' + trips[i].primary_location)
+                                .text('Your trip to ' ) //+ trips[i].primary_location + ' from ' + trips[i].start_date + ' to ' + trips[i].end_date)
                                 .images([
-                                    builder.CardImage.create(session, trips[i].image_url)
+                                    builder.CardImage.create(session, '') //trips[i].image_url)
                                 ])
                                 .buttons([
-                                    builder.CardAction.openUrl(session, 'https://www.tripit.com/trip/show/id/' + trips[i].id, 'View in TripIt')
+                                    builder.CardAction.openUrl(session, '') //https://www.tripit.com/trip/show/id/' + trips[i].id, 'View in TripIt')
                                 ]);
                             cards.push(card);
                         }
