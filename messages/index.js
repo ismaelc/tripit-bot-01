@@ -95,15 +95,15 @@ bot.dialog('/', function(session) {
                         var trips = JSON.parse(listArr).Trip;
                         var cards = [];
                         for (var i = 0, len = trips.length; i < len; i++) {
-                            var card = new builder.HeroCard(session)
-                                .title('Azure Storage')
-                                .subtitle('Offload the heavy lifting of data center management')
-                                .text('Store and help protect your data. Get durable, highly available data storage across the globe and pay only for what you use.')
+                            var card = new builder.ThumbnailCard(session)
+                                .title('DocumentDB')
+                                .subtitle('Blazing fast, planet-scale NoSQL')
+                                .text('NoSQL service for highly available, globally distributed apps—take full advantage of SQL and JavaScript over document and key-value data without the hassles of on-premises or virtual machine-based cloud database options.')
                                 .images([
-                                    builder.CardImage.create(session, 'https://docs.microsoft.com/en-us/azure/storage/media/storage-introduction/storage-concepts.png')
+                                    builder.CardImage.create(session, 'https://docs.microsoft.com/en-us/azure/documentdb/media/documentdb-introduction/json-database-resources1.png')
                                 ])
                                 .buttons([
-                                    builder.CardAction.openUrl(session, 'https://azure.microsoft.com/en-us/services/storage/', 'Learn More')
+                                    builder.CardAction.openUrl(session, 'https://azure.microsoft.com/en-us/services/documentdb/', 'Learn More')
                                 ]);
                             cards.push(card);
                         }
