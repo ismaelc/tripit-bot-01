@@ -149,15 +149,18 @@ bot.on('trigger', function(message) {
                 //    .address(queuedMessage.address)
                 //    .text('This is coming from the trigger: ' + JSON.stringify(trip));
 
+                /*
                 var reply = new builder.Message()
                     .address(queuedMessage.address)
                     .text('Payload: ' + JSON.stringify(trip));
 
                 // Send it to the channel
                 bot.send(reply);
+                */
 
-                /*
+
                 var card = new builder.ThumbnailCard()
+                        .address(queuedMessage.address)
                         .title('Your trip was ' + notification.tripit_changed)
                         .subtitle('Your trip to ' + trip.Trip.primary_location + ' has been ' + notification.tripit_changed)
                         .text('<Insert useful text here>')
@@ -172,12 +175,12 @@ bot.on('trigger', function(message) {
                 // Send it to the channel
                 bot.send(msg);
                 //bot.send(JSON.stringify(message));
-                */
+
             })
             .catch((error) => {
                 bot.send('Error: ' + error)
             });
-        
+
         // Below means we're getting notification from TripIt Webhook function
         // .. and not internally e.g. login
 
