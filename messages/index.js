@@ -136,8 +136,15 @@ bot.on('trigger', function(message) {
         var auth = payload.auth;
         var notification = payload.notification;
 
+        var reply = new builder.Message()
+            .address(queuedMessage.address)
+            .text('Payload: ' + JSON.stringify(payload));
+
+        // Send it to the channel
+        bot.send(reply);
         //bot.send('Notification: ' + JSON.stringify(notification));
 
+        /*
         tripit.getTrip(auth.tripit_token, auth.tripit_tokenSecret, notification.tripit_id)
             .then((trip) => {
                 // Construct message to send to the channel
@@ -167,6 +174,7 @@ bot.on('trigger', function(message) {
             .catch((error) => {
                 bot.send('Error: ' + error)
             });
+        */
         // Below means we're getting notification from TripIt Webhook function
         // .. and not internally e.g. login
 
