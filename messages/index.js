@@ -96,14 +96,14 @@ bot.dialog('/', function(session) {
                         var cards = [];
                         for (var i = 0, len = trips.length; i < len; i++) {
                             var card = new builder.ThumbnailCard(session)
-                                .title('DocumentDB')
-                                .subtitle('Blazing fast, planet-scale NoSQL')
-                                .text('NoSQL service for highly available, globally distributed apps—take full advantage of SQL and JavaScript over document and key-value data without the hassles of on-premises or virtual machine-based cloud database options.')
+                                .title('Trip name: ' + trips[i].Trip.display_name)
+                                .subtitle(trips[i].Trip.start_date + ' - ' + trips[i].Trip.primary_location)
+                                .text('Your trip to ' + trips[i].Trip.primary_location + ' from ' + trips[i].Trip.start_date + ' to ' trips[i].Trip.end_date)
                                 .images([
-                                    builder.CardImage.create(session, 'https://docs.microsoft.com/en-us/azure/documentdb/media/documentdb-introduction/json-database-resources1.png')
+                                    builder.CardImage.create(session, trips[i].Trip.image_url)
                                 ])
                                 .buttons([
-                                    builder.CardAction.openUrl(session, 'https://azure.microsoft.com/en-us/services/documentdb/', 'Learn More')
+                                    builder.CardAction.openUrl(session, 'https://www.tripit.com/trip/show/id/' + trips[i].Trip.id, 'View in TripIt')
                                 ]);
                             cards.push(card);
                         }
