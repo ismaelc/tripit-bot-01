@@ -132,16 +132,7 @@ bot.on('trigger', function(message) {
     // TODO: Test on login when these params are missing
     var payload = JSON.parse(queuedMessage.text);
 
-    if (payload.notification === 'undefined') {
-        // Below means we're getting notification from TripIt Webhook function
-        // .. and not internally e.g. login
-        var reply = new builder.Message()
-            .address(queuedMessage.address)
-            .text('This is coming from the trigger: ' + JSON.stringify(message));
-
-        // Send it to the channel
-        bot.send(reply);
-    } else {
+    if (payload.notification) {
         var auth = payload.auth;
         var notification = payload.notification;
 
@@ -176,6 +167,16 @@ bot.on('trigger', function(message) {
             .catch((error) => {
                 bot.send('Error: ' + error)
             });
+        // Below means we're getting notification from TripIt Webhook function
+        // .. and not internally e.g. login
+
+    } else {
+        var reply = new builder.Message()
+            .address(queuedMessage.address)
+            .text('This is coming from the trigger: ' + JSON.stringify(message));
+
+        // Send it to the channel
+        bot.send(reply);
     }
 
 
