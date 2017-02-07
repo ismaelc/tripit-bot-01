@@ -68,8 +68,8 @@ bot.dialog('/', function(session) {
 
                 var msg = new builder.Message(session).addAttachment(card);
                 //session.send(msg);
-                session.send(JSON.stringify(stateObject));
-                //session.send('Click to login: ' + tripit_auth_url + 'auth/tripit?' + '&state=' + stateObjectBuffer);
+                //session.send(JSON.stringify(stateObject));
+                session.send('Click to login: ' + tripit_auth_url + 'auth/tripit?' + '&state=' + stateObjectBuffer);
                 break;
             case 'Greet':
                 session.send('Greet');
