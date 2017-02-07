@@ -112,7 +112,8 @@ bot.dialog('/', function(session) {
                                         builder.CardImage.create(session, trips[i].image_url) //trips[i].image_url)
                                     ])
                                     .buttons([
-                                        builder.CardAction.openUrl(session, 'https://www.tripit.com/trip/show/id/' + trips[i].id, 'View in TripIt') //https://www.tripit.com/trip/show/id/' + trips[i].id, 'View in TripIt')
+                                        builder.CardAction.openUrl(session, 'https://www.tripit.com/trip/show/id/' + trips[i].id, 'View in TripIt'),
+                                        builder.CardAction.openUrl(session, 'https://www.tripit.com/trip/show/id/' + trips[i].id, 'Share Trip')
                                     ]);
                                 cards.push(card);
                             }
