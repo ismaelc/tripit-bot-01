@@ -59,7 +59,7 @@ bot.dialog('/', function(session) {
             case 'Login':
                 // Package state along with the auth url
 
-                if (session.message.address.channelId != 'webchat') delete session.message.address.conversation;
+                //if (session.message.address.channelId != 'webchat') delete session.message.address.conversation;
 
                 var stateObjectBuffer = new Buffer(JSON.stringify(stateObject)).toString('base64');
                 var card = new builder.SigninCard(session)
