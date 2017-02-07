@@ -79,40 +79,6 @@ bot.dialog('/', function(session) {
                 break;
             case 'Debug':
                 session.send('Debug');
-                /*
-                db.getDatabase()
-                    .then(() => db.getCollection())
-                    .then(() => {
-                        //db.exit(`Completed successfully`);
-                        session.send('Completed successfully');
-                    })
-                    .catch((error) => {
-                        //exit(`Completed with error ${JSON.stringify(error)}`)
-                        session.send('Completed with error ' + JSON.stringify(error));
-                    });
-                */
-
-                /*
-                var card = new builder.SigninCard()
-                    .text('Debug')
-                    .button('Debug button', tripit_auth_url + 'auth/tripit?' + '&state=' + stateObjectBuffer);
-
-                var msg = new builder.Message().addAttachment(card);
-                */
-
-                var card = new builder.ThumbnailCard()
-                        .title('BotFramework Thumbnail Card')
-                        .subtitle('Your bots — wherever your users are talking')
-                        .text('Build and connect intelligent bots to interact with your users naturally wherever they are, from text/sms to Skype, Slack, Office 365 mail and other popular services.')
-                        .images([
-                            builder.CardImage.create(null, 'https://sec.ch9.ms/ch9/7ff5/e07cfef0-aa3b-40bb-9baa-7c9ef8ff7ff5/buildreactionbotframework_960.jpg')
-                        ])
-                        .buttons([
-                            builder.CardAction.openUrl(null, 'https://docs.botframework.com/en-us/', 'Get Started')
-                        ]);
-
-                var msg = new builder.Message().addAttachment(card);
-                session.send(msg);
                 break;
 
         }
@@ -136,14 +102,11 @@ bot.on('trigger', function(message) {
         var auth = payload.auth;
         var notification = payload.notification;
 
-
         //bot.send('Notification: ' + JSON.stringify(notification));
-
 
         tripit.getTrip(auth.tripit_token, auth.tripit_tokenSecret, notification.tripit_id)
             .then((trip_) => {
                 // Construct message to send to the channel
-
 
                 //var reply = new builder.Message()
                 //    .address(queuedMessage.address)
@@ -188,7 +151,8 @@ bot.on('trigger', function(message) {
     } else {
         var reply = new builder.Message()
             .address(queuedMessage.address)
-            .text('This is coming from the trigger: ' + JSON.stringify(message));
+            //.text('This is coming from the trigger: ' + JSON.stringify(message));
+            .text('You\'re logged in!');
 
         // Send it to the channel
         bot.send(reply);
