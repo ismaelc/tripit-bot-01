@@ -44,7 +44,7 @@ intents.onDefault('/default');
 bot.dialog('/', function(session) {
 
     // Check if this is a 'conversation' and if tripit was mentioned
-    // Ignore chat if it's in a channel/group and 'tripit' was NOT
+    // Ignore chat if it's in a channel/group and 'tripit' was NOT mentioned
     if ((typeof session.message.address.conversation.name !== 'undefined') && (session.message.text.toLowerCase().indexOf('tripit') == -1)) {
         //session.send('Match')
         console.log('<Chat ignored>: ' + JSON.stringify(session.message.address.conversation));
@@ -74,7 +74,7 @@ bot.dialog('/', function(session) {
 
                     var msg = new builder.Message(session).addAttachment(card);
 
-                    if ((typeof session.message.address.channelId === 'undefined') && (session.message.address.channelId != 'webchat')) delete session.message.address.conversation;
+                    if ((typeof session.message.address.conversation.name !== 'undefined') && (session.message.address.channelId != 'webchat')) delete session.message.address.conversation;
 
                     session.send(msg);
                     //session.send(JSON.stringify(stateObject));
