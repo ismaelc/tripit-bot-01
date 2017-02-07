@@ -76,6 +76,7 @@ bot.dialog('/', function(session) {
                 break;
             case 'GetTrips':
                 //session.send('Get Trips');
+
                 var address = session.message.address;
                 var id = address.user.id;
                 var name = address.user.name;
@@ -84,7 +85,14 @@ bot.dialog('/', function(session) {
 
                 tripit.getCreds(id, name, channelId, serviceUrl)
                 .then((credArr) => {
-                    session.send(JSON.stringify(credArr[0]));
+                    //session.send(JSON.stringify(credArr[0]));
+                    session.userData.tripit_auth = credArr[0].tripit_auth;
+                })
+                .then(() => {
+                    return tripit.listTrips(session.userData.tripit_auth.tripit_token, session.userData.tripit_auth.tripit_tokenSecret);
+                })
+                .then((listArr) => {
+                    session.send('Trips: ' + JSON.stringify(listArr))
                 })
                 .catch((error) => {
                     session.send(JSON.stringify(error));
