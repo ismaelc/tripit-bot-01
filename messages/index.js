@@ -136,15 +136,10 @@ bot.on('trigger', function(message) {
         var auth = payload.auth;
         var notification = payload.notification;
 
-        var reply = new builder.Message()
-            .address(queuedMessage.address)
-            .text('Payload: ' + JSON.stringify(payload));
 
-        // Send it to the channel
-        bot.send(reply);
         //bot.send('Notification: ' + JSON.stringify(notification));
 
-        /*
+
         tripit.getTrip(auth.tripit_token, auth.tripit_tokenSecret, notification.tripit_id)
             .then((trip) => {
                 // Construct message to send to the channel
@@ -154,7 +149,14 @@ bot.on('trigger', function(message) {
                 //    .address(queuedMessage.address)
                 //    .text('This is coming from the trigger: ' + JSON.stringify(trip));
 
+                var reply = new builder.Message()
+                    .address(queuedMessage.address)
+                    .text('Payload: ' + JSON.stringify(trip));
 
+                // Send it to the channel
+                bot.send(reply);
+
+                /*
                 var card = new builder.ThumbnailCard()
                         .title('Your trip was ' + notification.tripit_changed)
                         .subtitle('Your trip to ' + trip.Trip.primary_location + ' has been ' + notification.tripit_changed)
@@ -170,6 +172,7 @@ bot.on('trigger', function(message) {
                 // Send it to the channel
                 bot.send(msg);
                 //bot.send(JSON.stringify(message));
+                */
             })
             .catch((error) => {
                 bot.send('Error: ' + error)
