@@ -184,7 +184,7 @@ bot.on('trigger', function(message) {
 
     var reply = new builder.Message()
         .address(queuedMessage.address)
-        .text('This is coming from the trigger: ' + JSON.stringify(payload));
+        .text('This is coming from the trigger: ' + payload.notification);
 
     // Send it to the channel
     bot.send(reply);
