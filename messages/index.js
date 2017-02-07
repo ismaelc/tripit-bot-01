@@ -84,20 +84,42 @@ bot.dialog('/', function(session) {
                 var serviceUrl = address.serviceUrl;
 
                 tripit.getCreds(id, name, channelId, serviceUrl)
-                .then((credArr) => {
-                    //session.send(JSON.stringify(credArr[0]));
-                    session.userData.tripit_auth = credArr[0].tripit_auth;
-                })
-                .then(() => {
-                    return tripit.listTrips(session.userData.tripit_auth.tripit_token, session.userData.tripit_auth.tripit_tokenSecret);
-                })
-                .then((listArr) => {
-                    var trips = JSON.parse(listArr).Trip;
-                    session.send('Trips: ' + trips);
-                })
-                .catch((error) => {
-                    session.send(JSON.stringify(error));
-                });
+                    .then((credArr) => {
+                        //session.send(JSON.stringify(credArr[0]));
+                        session.userData.tripit_auth = credArr[0].tripit_auth;
+                    })
+                    .then(() => {
+                        return tripit.listTrips(session.userData.tripit_auth.tripit_token, session.userData.tripit_auth.tripit_tokenSecret);
+                    })
+                    .then((listArr) => {
+                        var trips = JSON.parse(listArr).Trip;
+                        var cards = [];
+                        for (var i = 0, len = trips.length; i < len; i++) {
+                            var card = new builder.HeroCard(session)
+                                .title('Azure Storage')
+                                .subtitle('Offload the heavy lifting of data center management')
+                                .text('Store and help protect your data. Get durable, highly available data storage across the globe and pay only for what you use.')
+                                .images([
+                                    builder.CardImage.create(session, 'https://docs.microsoft.com/en-us/azure/storage/media/storage-introduction/storage-concepts.png')
+                                ])
+                                .buttons([
+                                    builder.CardAction.openUrl(session, 'https://azure.microsoft.com/en-us/services/storage/', 'Learn More')
+                                ]);
+                            cards.push(card);
+                        }
+
+                        // create reply with Carousel AttachmentLayout
+                        var reply = new builder.Message(session)
+                            .attachmentLayout(builder.AttachmentLayout.carousel)
+                            .attachments(cards);
+
+                        session.send(reply);
+
+                        //session.send('Trips: ' + trips);
+                    })
+                    .catch((error) => {
+                        session.send(JSON.stringify(error));
+                    });
 
                 //session.send('Address: ' + id + ' ' + name + ' ' + channelId + ' ' + serviceUrl);
                 break;
@@ -150,15 +172,15 @@ bot.on('trigger', function(message) {
                 var trip = JSON.parse(_trip);
 
                 var card = new builder.ThumbnailCard()
-                        .title('TripIt Alert')
-                        .subtitle('Trip date: ' + trip.Trip.start_date)
-                        .text('Your trip to ' + trip.Trip.primary_location + ' has been ' + notification.tripit_change)
-                        .images([
-                            builder.CardImage.create(null, trip.Trip.image_url)
-                        ])
-                        .buttons([
-                            builder.CardAction.openUrl(null, 'https://www.tripit.com/trip/show/id/' + notification.tripit_id, 'View in TripIt')
-                        ]);
+                    .title('TripIt Alert')
+                    .subtitle('Trip date: ' + trip.Trip.start_date)
+                    .text('Your trip to ' + trip.Trip.primary_location + ' has been ' + notification.tripit_change)
+                    .images([
+                        builder.CardImage.create(null, trip.Trip.image_url)
+                    ])
+                    .buttons([
+                        builder.CardAction.openUrl(null, 'https://www.tripit.com/trip/show/id/' + notification.tripit_id, 'View in TripIt')
+                    ]);
 
                 var msg = new builder.Message()
                     .address(queuedMessage.address)
