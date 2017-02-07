@@ -98,7 +98,7 @@ bot.dialog('/', function(session) {
                             var card = new builder.ThumbnailCard(session)
                                 .title('Trip name: ' + trips[i].display_name)
                                 .subtitle(trips[i].start_date + ' - ' + trips[i].primary_location) //trips[i].start_date + ' - ' + trips[i].primary_location)
-                                .text('Your trip to ') //+ trips[i].primary_location + ' from ' + trips[i].start_date + ' to ' + trips[i].end_date)
+                                .text('Your trip to ' + trips[i].primary_location + ' from ' + trips[i].start_date + ' to ' + trips[i].end_date) //+ trips[i].primary_location + ' from ' + trips[i].start_date + ' to ' + trips[i].end_date)
                                 .images([
                                     builder.CardImage.create(session, trips[i].image_url) //trips[i].image_url)
                                 ])
