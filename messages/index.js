@@ -160,7 +160,7 @@ bot.on('trigger', function(message) {
 
 
                 var card = new builder.ThumbnailCard()
-                        .title('Your trip to ')
+                        .title('Your trip to ' + trip.Trip.primary_location)
                         .subtitle('Trip date: ')
                         .text('<Insert useful text here>')
                         .images([
