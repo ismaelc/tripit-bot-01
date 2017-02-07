@@ -160,11 +160,11 @@ bot.on('trigger', function(message) {
 
 
                 var card = new builder.ThumbnailCard()
-                        .title('title')
-                        .subtitle('subtitle')
+                        .title('Your trip to ' + trip.Trip.primary_location + ' has been ' + notification.tripit_change)
+                        .subtitle('Trip date: ' + trip.Trip.start_date)
                         .text('<Insert useful text here>')
                         .images([
-                            builder.CardImage.create(null, '')
+                            builder.CardImage.create(null, trip.Trip.image_url)
                         ])
                         .buttons([
                             builder.CardAction.openUrl(null, 'https://docs.botframework.com/en-us/', 'View in TripIt')
