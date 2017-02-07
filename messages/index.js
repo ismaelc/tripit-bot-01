@@ -132,7 +132,6 @@ bot.on('trigger', function(message) {
     // TODO: Test on login when these params are missing
     var payload = JSON.parse(queuedMessage.text);
 
-
     if (typeof payload.notification === 'undefined') {
         // Below means we're getting notification from TripIt Webhook function
         // .. and not internally e.g. login
@@ -179,14 +178,16 @@ bot.on('trigger', function(message) {
             });
 
     }
-    
+
     // Construct message to send to the channel
+    /*
     var reply = new builder.Message()
         .address(queuedMessage.address)
         .text('This is coming from the trigger: ' + queuedMessage.text);
 
     // Send it to the channel
     bot.send(reply);
+    */
 
     /* Was testing to see if this will work, nope it didn't
     bot.beginDialog(reply, 'fromTrigger', null, (err) => {
