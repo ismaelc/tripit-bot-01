@@ -74,6 +74,7 @@ bot.dialog('/', function(session) {
 
                     var msg = new builder.Message(session).addAttachment(card);
 
+                    // If message was typed in a group/channel, turn it into PM as this is login
                     if ((typeof session.message.address.conversation.name !== 'undefined') && (session.message.address.channelId != 'webchat')) delete session.message.address.conversation;
 
                     session.send(msg);
@@ -113,7 +114,8 @@ bot.dialog('/', function(session) {
                                     ])
                                     .buttons([
                                         builder.CardAction.openUrl(session, 'https://www.tripit.com/trip/show/id/' + trips[i].id, 'View in TripIt'),
-                                        builder.CardAction.openUrl(session, 'https://www.tripit.com/trip/show/id/' + trips[i].id, 'Share Trip')
+                                        //builder.CardAction.openUrl(session, 'https://www.tripit.com/trip/show/id/' + trips[i].id, 'Share Trip')
+                                        builder.CardAction.dialogAction(session, "Share", "<trip data to share>", "Share trip")
                                     ]);
                                 cards.push(card);
                             }
@@ -146,6 +148,15 @@ bot.dialog('/', function(session) {
     }
 });
 
+bot.beginDialogAction('Share', '/share');
+
+// Create the dialog itself.
+bot.dialog('/share', [
+    function (session, args) {
+        session.endDialog("Trip shared: " + args.data);
+    }
+]);
+
 // Intercept trigger event (ActivityTypes.Trigger)
 bot.on('trigger', function(message) {
     console.log('Triggered');
@@ -158,7 +169,10 @@ bot.on('trigger', function(message) {
     // TODO: Test on login when these params are missing
     var payload = JSON.parse(queuedMessage.text);
 
-    if (payload.notification) {
+    if(payload.action = 'share') {
+
+    }
+    else if (payload.notification) {
         var auth = payload.auth;
         var notification = payload.notification;
 
