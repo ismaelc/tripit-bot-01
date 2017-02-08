@@ -115,7 +115,9 @@ bot.dialog('/', function(session) {
                                     .buttons([
                                         builder.CardAction.openUrl(session, 'https://www.tripit.com/trip/show/id/' + trips[i].id, 'View in TripIt'),
                                         //builder.CardAction.openUrl(session, 'https://www.tripit.com/trip/show/id/' + trips[i].id, 'Share Trip')
-                                        builder.CardAction.dialogAction(session, "Share", "<trip data to share>", "Share trip")
+                                        builder.CardAction.dialogAction(session, "Share", "<trip data to share>", "Share trip"),
+                                        builder.CardAction.imBack(session, "Up", "up")
+
                                     ]);
                                 cards.push(card);
                             }
