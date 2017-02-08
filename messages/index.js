@@ -118,7 +118,7 @@ bot.dialog('/', function(session) {
                                     .buttons([
                                         builder.CardAction.openUrl(session, 'https://www.tripit.com/trip/show/id/' + trips[i].id, 'View in TripIt'),
                                         //builder.CardAction.openUrl(session, 'https://www.tripit.com/trip/show/id/' + trips[i].id, 'Share Trip')
-                                        builder.CardAction.dialogAction(session, "Share", "<trip data to share>", "Share trip")
+                                        builder.CardAction.dialogAction(session, "share", "<trip data to share>", "Share trip")
                                         //builder.CardAction.imBack(session, "<Message>", "<Button>")
 
                                     ]);
@@ -160,7 +160,7 @@ bot.dialog('/share', [
     }
 ]);
 
-bot.beginDialogAction('Share', '/share');
+bot.beginDialogAction('share', '/share');
 
 // Intercept trigger event (ActivityTypes.Trigger)
 bot.on('trigger', function(message) {
@@ -175,7 +175,7 @@ bot.on('trigger', function(message) {
     var payload = JSON.parse(queuedMessage.text);
 
     //TODO: Standardize on payload format coming from queue trigger
-    if(payload.action = 'share') {
+    if(payload.action == 'share') { // Not used at the moment
 
     }
     else if (payload.notification) {
@@ -229,6 +229,7 @@ bot.on('trigger', function(message) {
         // .. and not internally e.g. login
 
     } else {
+        // TODO: For some reason login confirmation bot reply is not send on widgets
         var reply = new builder.Message()
             .address(queuedMessage.address)
             //.text('This is coming from the trigger: ' + JSON.stringify(message));
