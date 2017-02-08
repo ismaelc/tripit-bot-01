@@ -93,6 +93,9 @@ bot.dialog('/', function(session) {
                     var channelId = address.channelId;
                     var serviceUrl = address.serviceUrl;
 
+                    //TODO: Per https://docs.botframework.com/en-us/node/builder/chat/session/#navtitle
+                    // 'dangerous to use session' - advisable to use proactive message with bot.send for
+                    // long running tasks
                     tripit.getCreds(id, name, channelId, serviceUrl)
                         .then((credArr) => {
                             //session.send(JSON.stringify(credArr[0]));
@@ -116,7 +119,7 @@ bot.dialog('/', function(session) {
                                         builder.CardAction.openUrl(session, 'https://www.tripit.com/trip/show/id/' + trips[i].id, 'View in TripIt'),
                                         //builder.CardAction.openUrl(session, 'https://www.tripit.com/trip/show/id/' + trips[i].id, 'Share Trip')
                                         builder.CardAction.dialogAction(session, "Share", "<trip data to share>", "Share trip"),
-                                        builder.CardAction.imBack(session, "Up", "up")
+                                        builder.CardAction.imBack(session, "<Message>", "<Button>")
 
                                     ]);
                                 cards.push(card);
@@ -150,14 +153,14 @@ bot.dialog('/', function(session) {
     }
 });
 
-bot.beginDialogAction('Share', '/share');
-
 // Create the dialog itself.
 bot.dialog('/share', [
     function (session, args) {
         session.endDialog("Trip shared: " + args.data);
     }
 ]);
+
+bot.beginDialogAction('Share', '/share');
 
 // Intercept trigger event (ActivityTypes.Trigger)
 bot.on('trigger', function(message) {
@@ -171,6 +174,7 @@ bot.on('trigger', function(message) {
     // TODO: Test on login when these params are missing
     var payload = JSON.parse(queuedMessage.text);
 
+    //TODO: Standardize on payload format coming from queue trigger
     if(payload.action = 'share') {
 
     }
@@ -271,10 +275,6 @@ if (useEmulator) {
         default: connector.listen()
     }
 }
-
-
-
-
 
 /*
 // Handle message from user
