@@ -40,6 +40,9 @@ intents.matches('Login', '/login');
 intents.onDefault('/default');
 */
 
+//TODO: Identify long-running processes and move out of dialog and into proactive functions
+// https://docs.botframework.com/en-us/node/builder/chat/session/#navtitle 'dangerous to use session'
+
 //bot.dialog('/', intents);
 bot.dialog('/', function(session) {
 
@@ -157,7 +160,7 @@ bot.dialog('/', function(session) {
 bot.dialog('/share', [
     function (session, args) {
         var sess = JSON.stringify(session.message.address);
-        session.endDialog("Trip shared: " + sess); //args.data);
+        session.endDialog("Trip shared: " + saveLastGroupChannel(session)); //args.data);
         //session.endDialog('Session: ' + JSON.stringify(session));
     }
 ]);
@@ -277,6 +280,11 @@ if (useEmulator) {
     module.exports = {
         default: connector.listen()
     }
+}
+
+function saveLastGroupChannel(session) {
+    var groups = session.userData.groupChannels;
+    return groups;
 }
 
 /*
