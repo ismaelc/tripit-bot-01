@@ -156,8 +156,8 @@ bot.dialog('/', function(session) {
 // Create the dialog itself.
 bot.dialog('/share', [
     function (session, args) {
-        //session.endDialog("Trip shared: " + args.data);
-        session.endDialog('Session: ' + JSON.stringify(session));
+        session.endDialog("Trip shared: " + args.data);
+        //session.endDialog('Session: ' + JSON.stringify(session));
     }
 ]);
 
