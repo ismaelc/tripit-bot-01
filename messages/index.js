@@ -284,6 +284,7 @@ if (useEmulator) {
 
 function saveLastGroupChannel(session) {
     //return 'test';
+    if(!session.userData.lastGroupChannels) session.userData.lastGroupChannels = [];
     return JSON.stringify(session.userData);
 }
 
