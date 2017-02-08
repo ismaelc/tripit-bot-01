@@ -283,7 +283,8 @@ if (useEmulator) {
 }
 
 function saveLastGroupChannel(session) {
-    return 'test';
+    //return 'test';
+    return JSON.stringify(session.userData);
 }
 
 /*
