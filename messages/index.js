@@ -156,7 +156,8 @@ bot.dialog('/', function(session) {
 // Create the dialog itself.
 bot.dialog('/share', [
     function (session, args) {
-        session.endDialog("Trip shared: " + args.data);
+        //session.endDialog("Trip shared: " + args.data);
+        session.send('Session: ' + JSON.stringify(session));
     }
 ]);
 
@@ -164,7 +165,7 @@ bot.beginDialogAction('share', '/share');
 
 // Intercept trigger event (ActivityTypes.Trigger)
 bot.on('trigger', function(message) {
-    console.log('Triggered');
+    //console.log('Triggered');
     // Handle message from trigger function
     var queuedMessage = message.value;
 
