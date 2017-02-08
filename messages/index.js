@@ -283,9 +283,7 @@ if (useEmulator) {
 }
 
 function saveLastGroupChannel(session) {
-    var groups = session.userData.groupChannels;
-    if(!groups) groups = [];
-    return groups;
+    return 'test';
 }
 
 /*
