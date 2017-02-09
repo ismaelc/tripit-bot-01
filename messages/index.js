@@ -129,7 +129,7 @@ bot.dialog('/', function(session) {
                                     .buttons([
                                         builder.CardAction.openUrl(session, 'https://www.tripit.com/trip/show/id/' + trips[i].id, 'View in TripIt'),
                                         //builder.CardAction.openUrl(session, 'https://www.tripit.com/trip/show/id/' + trips[i].id, 'Share Trip')
-                                        builder.CardAction.dialogAction(session, "share", { 'tripit_id': trips[i].id }, "Share trip")
+                                        builder.CardAction.dialogAction(session, "share", trips[i].id, "Share trip")
                                         //builder.CardAction.imBack(session, "<Message>", "<Button>")
 
                                     ]);
@@ -170,7 +170,7 @@ bot.dialog('/share', [
         var session_address = session.message.address;
         var user_data = session.userData;
 
-        session.endDialog(JSON.stringify(JSON.parse(args.data)));
+        session.endDialog(args.data);
         /*
         session.send('Current session address: ' + sess);
         session.endDialog("userData saved: " + JSON.stringify(utils.getLastGroupChannelAddress(session))); //args.data);
