@@ -92,7 +92,7 @@ bot.dialog('/', function(session) {
                     break;
                 case 'Greet':
                     var greetings = ['Hey','Yo','Whatup','Hiya','Yeah?','Lol','Upupdowndown'];
-                    session.send(greetings[Math.floor(Math.random() * myArray.length)];);
+                    session.send(greetings[Math.floor(Math.random() * greetings.length)];);
                     break;
                 case 'GetTrips':
                     //session.send('Get Trips');
