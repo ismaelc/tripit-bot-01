@@ -160,7 +160,7 @@ bot.dialog('/', function(session) {
 bot.dialog('/share', [
     function (session, args) {
         var sess = JSON.stringify(session.message.address);
-        session.endDialog("Trip shared: " + saveLastGroupChannel(session)); //args.data);
+        session.endDialog("Trip shared: " + utils.saveLastGroupChannelAddress(session)); //args.data);
         //session.endDialog('Session: ' + JSON.stringify(session));
     }
 ]);
@@ -280,12 +280,6 @@ if (useEmulator) {
     module.exports = {
         default: connector.listen()
     }
-}
-
-function saveLastGroupChannel(session) {
-    //return 'test';
-    if(!session.userData.lastGroupChannels) session.userData.lastGroupChannels = [];
-    return JSON.stringify(session.userData);
 }
 
 /*
