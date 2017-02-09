@@ -48,7 +48,7 @@ function getLastGroupChannelAddress(session) {
     var serviceUrl = session.message.address.serviceUrl;
 
     // >> If no group/channels are saved to userData yet, initialize it
-    //if(!session.userData.hasOwnProperty('lastGroupChannelAddresses')) session.userData['lastGroupChannelAddresses'] = [];
+    if(!session.userData.hasOwnProperty('lastGroupChannelAddresses')) session.userData['lastGroupChannelAddresses'] = [];
 
     // >> Loop through userData to compare incoming message address and get it
     var i = 0;
