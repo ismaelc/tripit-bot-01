@@ -201,7 +201,7 @@ bot.dialog('/share', [
                         builder.CardImage.create(null, trip.Trip.image_url)
                     ])
                     .buttons([
-                        builder.CardAction.openUrl(null, 'https://www.tripit.com/trip/show/id/' + notification.tripit_id, 'View in TripIt')
+                        builder.CardAction.openUrl(null, 'https://www.tripit.com/trip/show/id/' + tripit_id, 'View in TripIt')
                     ]);
 
                 var address = utils.getLastGroupChannelAddress(session);
