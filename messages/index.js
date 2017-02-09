@@ -47,20 +47,19 @@ intents.onDefault('/default');
 bot.dialog('/', function(session) {
 
     if(session.message.address.conversation.hasOwnProperty('name')) {
-        session.send('YUP: ' + utils.saveLastGroupChannelAddress(session));
-    }
-    else {
-        session.send('Nope: ' + JSON.stringify(session.message.address));
+        // Is a group chat
+        utils.saveLastGroupChannelAddress(session));
     }
 
     // Check if this is a 'conversation' and if tripit was mentioned
     // Ignore chat if it's in a channel/group and 'tripit' was NOT mentioned
-    if ((typeof session.message.address.conversation.name !== 'undefined') && (session.message.text.toLowerCase().indexOf('tripit') == -1)) {
+    if ((session.message.address.conversation.hasOwnProperty('name')) && (session.message.text.toLowerCase().indexOf('tripit') == -1)) {
+    //if ((typeof session.message.address.conversation.name !== 'undefined') && (session.message.text.toLowerCase().indexOf('tripit') == -1)) {
         //session.send('Match')
-        console.log('<Chat ignored>: ' + JSON.stringify(session.message.address.conversation));
+        //console.log('<Chat ignored>: ' + JSON.stringify(session.message.address.conversation));
         session.endDialog();
     } else {
-        console.log('Went here');
+        //console.log('Went here');
         // Save user's address so we can reply later,
         // ... will be passed as state during authentication
         var stateObject = {
@@ -167,7 +166,7 @@ bot.dialog('/', function(session) {
 bot.dialog('/share', [
     function (session, args) {
         var sess = JSON.stringify(session.message.address);
-        session.endDialog("Trip shared: " + utils.saveLastGroupChannelAddress(session)); //args.data);
+        session.endDialog("Trip shared: " + utils.getLastGroupChannelAddress(session)); //args.data);
         //session.endDialog('Session: ' + JSON.stringify(session));
     }
 ]);
