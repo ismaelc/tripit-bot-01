@@ -58,13 +58,16 @@ function getLastGroupChannelAddress(session) {
         if((groupChannelAddress.channelId == channelId) && (groupChannelAddress.serviceUrl == serviceUrl)) {
             // Found! Replace with current message address
             address = groupChannelAddress;
-            return 'YES'
             break;
         }
     }
 
     //return session.userData.lastGroupChannelAddresses;
-    return 'NO';
+    //return 'NO';
+    return {
+        'userData': session.userData.lastGroupChannelAddresses,
+        'session': session.message.address
+    }
 
 }
 
