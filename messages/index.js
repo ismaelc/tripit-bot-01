@@ -166,7 +166,8 @@ bot.dialog('/', function(session) {
 bot.dialog('/share', [
     function (session, args) {
         var sess = JSON.stringify(session.message.address);
-        session.endDialog("Trip shared: " + JSON.stringify(utils.getLastGroupChannelAddress(session))); //args.data);
+        session.send('Current session: ' + sess);
+        session.endDialog("userData saved: " + JSON.stringify(utils.getLastGroupChannelAddress(session))); //args.data);
         //session.endDialog('Session: ' + JSON.stringify(session));
     }
 ]);

@@ -62,7 +62,7 @@ function getLastGroupChannelAddress(session) {
         }
     }
 
-    return address;
+    return session.userData.lastGroupChannelAddresses;
 
 }
 
