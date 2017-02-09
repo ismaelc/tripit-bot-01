@@ -46,8 +46,8 @@ intents.onDefault('/default');
 //bot.dialog('/', intents);
 bot.dialog('/', function(session) {
 
-    if((typeof session.message.address.conversation.isGroup !== 'undefined') && (session.message.address.conversation.isGroup == true)) {
-        session.send(utils.saveLastGroupChannelAddress(session));
+    if((typeof session.message.address.conversation.isGroup !== 'undefined') && (typeof session.message.address.conversation.isGroup.name !== 'undefined')) {
+        session.send('YUP: ' + utils.saveLastGroupChannelAddress(session));
     }
     else {
         session.send('Nope: ' + JSON.stringify(session.message.address));
