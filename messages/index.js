@@ -48,7 +48,8 @@ bot.dialog('/', function(session) {
 
     if(session.message.address.conversation.hasOwnProperty('name')) {
         // Is a group chat
-        session.send('Group address pushed: ' + JSON.stringify(utils.saveLastGroupChannelAddress(session)));
+        //session.send('Group address pushed: ' + JSON.stringify(utils.saveLastGroupChannelAddress(session)));
+        utils.saveLastGroupChannelAddress(session);
     }
 
     // Check if this is a 'conversation' and if tripit was mentioned
