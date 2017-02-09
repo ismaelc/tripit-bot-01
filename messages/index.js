@@ -46,7 +46,7 @@ intents.onDefault('/default');
 //bot.dialog('/', intents);
 bot.dialog('/', function(session) {
 
-    if((typeof session.message.address.conversation.isGroup !== 'undefined') && (session.message.address.conversation.isGroup == true)) utils.saveLastGroupChannelAddress(session);
+    //if((typeof session.message.address.conversation.isGroup !== 'undefined') && (session.message.address.conversation.isGroup == true)) utils.saveLastGroupChannelAddress(session);
 
     // Check if this is a 'conversation' and if tripit was mentioned
     // Ignore chat if it's in a channel/group and 'tripit' was NOT mentioned
