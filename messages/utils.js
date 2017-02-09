@@ -38,9 +38,9 @@ function saveLastGroupChannelAddress(session) {
     }
 
     // No match, push this new group address
-    if(i == len) session.userData.lastGroupChannelAddresses.push(session.message.address);
+    if(i >= len) session.userData.lastGroupChannelAddresses.push(session.message.address);
 
-    //return JSON.stringify(session.userData.lastGroupChannelAddresses);
+    return JSON.stringify(session.userData.lastGroupChannelAddresses);
 }
 
 function getLastGroupChannelAddress(session) {
@@ -50,7 +50,7 @@ function getLastGroupChannelAddress(session) {
     // >> If no group/channels are saved to userData yet, initialize it
     if(!session.userData.lastGroupChannelAddresses) session.userData.lastGroupChannelAddresses = [];
 
-    // >> Loop through userData to compare incoming message address and replace it
+    // >> Loop through userData to compare incoming message address and get it
     var i = 0;
     var address = {};
     for(var len = session.userData.lastGroupChannelAddresses; i < len; i++) {
