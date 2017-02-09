@@ -165,8 +165,8 @@ bot.dialog('/', function(session) {
 // Create the dialog itself.
 bot.dialog('/share', [
     function (session, args) {
-        var sess = JSON.stringify(session.userData);
-        session.send('Current session: ' + sess);
+        var sess = JSON.stringify(session.message.address);
+        session.send('Current session address: ' + sess);
         session.endDialog("userData saved: " + JSON.stringify(utils.getLastGroupChannelAddress(session))); //args.data);
         //session.endDialog('userData: ' + JSON.stringify(session.userData.lastGroupChannelAddresses));
         //session.endDialog('Session: ' + JSON.stringify(session));
