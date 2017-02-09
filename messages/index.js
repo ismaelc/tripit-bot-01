@@ -91,7 +91,7 @@ bot.dialog('/', function(session) {
                     //session.send('Click to login: ' + tripit_auth_url + 'auth/tripit?' + '&state=' + stateObjectBuffer);
                     break;
                 case 'Greet':
-                    var greetings = ['Hey','Yo','Whatup','Hiya','Yeah?','Lol','Upupdowndown'];
+                    var greetings = ['Hey','Yo','Whatup','Hiya','Yeah?','Lol','Upupdowndown','Bonjour','Hola','Guten tag','Ciao','Kamusta','Namaste'];
                     session.send(greetings[Math.floor(Math.random() * greetings.length)]);
                     break;
                 case 'GetTrips':
@@ -128,7 +128,7 @@ bot.dialog('/', function(session) {
                                     .buttons([
                                         builder.CardAction.openUrl(session, 'https://www.tripit.com/trip/show/id/' + trips[i].id, 'View in TripIt'),
                                         //builder.CardAction.openUrl(session, 'https://www.tripit.com/trip/show/id/' + trips[i].id, 'Share Trip')
-                                        builder.CardAction.dialogAction(session, "share", "<trip data to share>", "Share trip")
+                                        builder.CardAction.dialogAction(session, "share", { 'tripit_id': trips[i].id }, "Share trip")
                                         //builder.CardAction.imBack(session, "<Message>", "<Button>")
 
                                     ]);
@@ -166,13 +166,52 @@ bot.dialog('/', function(session) {
 // Create the dialog itself.
 bot.dialog('/share', [
     function (session, args) {
-        var sess = JSON.stringify(session.message.address);
+        var session_address = session.message.address;
+        var user_data = session.userData;
+
+        session.endDialog(JSON.stringify(args.data));
         /*
         session.send('Current session address: ' + sess);
         session.endDialog("userData saved: " + JSON.stringify(utils.getLastGroupChannelAddress(session))); //args.data);
         */
         //session.endDialog('userData: ' + JSON.stringify(session.userData.lastGroupChannelAddresses));
         //session.endDialog('Session: ' + JSON.stringify(session));
+
+        /*
+        tripit.getTrip(user_data.tripit_auth.tripit_token, user_data.tripit_auth.tripit_tokenSecret, notification.tripit_id)
+            .then((_trip) => {
+                // Construct message to send to the channel
+
+                //var reply = new builder.Message()
+                //    .address(queuedMessage.address)
+                //    .text('This is coming from the trigger: ' + JSON.stringify(trip));
+
+
+                var trip = JSON.parse(_trip);
+
+                var card = new builder.ThumbnailCard()
+                    .title('TripIt Alert')
+                    .subtitle('Trip date: ' + trip.Trip.start_date)
+                    .text('Your trip to ' + trip.Trip.primary_location + ' has been ' + notification.tripit_change)
+                    .images([
+                        builder.CardImage.create(null, trip.Trip.image_url)
+                    ])
+                    .buttons([
+                        builder.CardAction.openUrl(null, 'https://www.tripit.com/trip/show/id/' + notification.tripit_id, 'View in TripIt')
+                    ]);
+
+                var msg = new builder.Message()
+                    .address(queuedMessage.address)
+                    .addAttachment(card);
+                // Send it to the channel
+                bot.send(msg);
+                //bot.send(JSON.stringify(message));
+
+            })
+            .catch((error) => {
+                bot.send('Error: ' + error)
+            });
+        */
     }
 ]);
 
