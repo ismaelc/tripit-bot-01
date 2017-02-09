@@ -170,7 +170,7 @@ bot.dialog('/share', [
         var session_address = session.message.address;
         var user_data = session.userData;
 
-        session.endDialog(JSON.stringify(args.data));
+        session.endDialog(JSON.stringify(JSON.parse(args.data)));
         /*
         session.send('Current session address: ' + sess);
         session.endDialog("userData saved: " + JSON.stringify(utils.getLastGroupChannelAddress(session))); //args.data);
