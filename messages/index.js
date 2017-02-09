@@ -50,7 +50,7 @@ bot.dialog('/', function(session) {
         session.send(utils.saveLastGroupChannelAddress(session));
     }
     else {
-        session.send('Nope: ' + JSON.stringify(session.message));
+        session.send('Nope: ' + JSON.stringify(session.message.address));
     }
 
     // Check if this is a 'conversation' and if tripit was mentioned
