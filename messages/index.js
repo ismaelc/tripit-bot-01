@@ -46,7 +46,7 @@ intents.onDefault('/default');
 //bot.dialog('/', intents);
 bot.dialog('/', function(session) {
 
-    if(session.message.address.conversation.hasOwnProperty('name')) {
+    if(session.message.address.conversation.hasOwnProperty('name') && (session.message.address.conversation.name != 'directmessage')) {
         // Is a group chat
         //session.send('Group address pushed: ' + JSON.stringify(utils.saveLastGroupChannelAddress(session)));
         utils.saveLastGroupChannelAddress(session);
@@ -212,7 +212,7 @@ bot.dialog('/share', [
                 //bot.send(msg);
                 session.send(msg);
                 //bot.send(JSON.stringify(message));
-                session.endDialog('Trip shared to #');
+                session.endDialog('Trip shared to #' + address.conversation.name);
 
             })
             .catch((error) => {
