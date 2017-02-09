@@ -28,7 +28,7 @@ function saveLastGroupChannelAddress(session) {
 
     // >> Loop through userData to compare incoming message address and replace it
     var i = 0;
-    for(var len = session.userData.lastGroupChannelAddresses; i < len; i++) {
+    for(var len = session.userData.lastGroupChannelAddresses.length; i < len; i++) {
         var groupChannelAddress = session.userData.lastGroupChannelAddresses[i];
         if((groupChannelAddress.channelId == channelId) && (groupChannelAddress.serviceUrl == serviceUrl)) {
             // Found! Replace with current message address
