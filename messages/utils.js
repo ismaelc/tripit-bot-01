@@ -24,7 +24,7 @@ function saveLastGroupChannelAddress(session) {
     var serviceUrl = session.message.address.serviceUrl;
 
     // >> If no group/channels are saved to userData yet, initialize it
-    if(!session.userData.lastGroupChannelAddresses) session.userData.lastGroupChannelAddresses = [];
+    if(!session.userData.hasOwnProperty('lastGroupChannelAddresses')) session.userData['lastGroupChannelAddresses'] = [];
 
     // >> Loop through userData to compare incoming message address and replace it
     var i = 0;
@@ -48,7 +48,7 @@ function getLastGroupChannelAddress(session) {
     var serviceUrl = session.message.address.serviceUrl;
 
     // >> If no group/channels are saved to userData yet, initialize it
-    if(!session.userData.lastGroupChannelAddresses) session.userData.lastGroupChannelAddresses = [];
+    if(!session.userData.hasOwnProperty('lastGroupChannelAddresses')) session.userData['lastGroupChannelAddresses'] = [];
 
     // >> Loop through userData to compare incoming message address and get it
     var i = 0;
@@ -62,7 +62,8 @@ function getLastGroupChannelAddress(session) {
         }
     }
 
-    return session.userData.lastGroupChannelAddresses;
+    //return session.userData.lastGroupChannelAddresses;
+    return address;
 
 }
 
