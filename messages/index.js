@@ -169,7 +169,7 @@ bot.dialog('/', function(session) {
 bot.dialog('/share', [
     function (session, args) {
         //var session_address = session.message.address;
-        //var user_data = session.userData;
+        var user_data = session.userData;
 
         // args.data = Trip id
         //session.endDialog(args.data);
