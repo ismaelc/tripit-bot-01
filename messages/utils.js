@@ -57,7 +57,7 @@ function getLastGroupChannelAddress(session) {
         var groupChannelAddress = session.userData.lastGroupChannelAddresses[i];
         if((groupChannelAddress.channelId == channelId) && (groupChannelAddress.serviceUrl == serviceUrl)) {
             // Found! Replace with current message address
-            address = session.message.address;
+            address = groupChannelAddress;
             break;
         }
     }
