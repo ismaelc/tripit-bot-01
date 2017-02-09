@@ -50,6 +50,7 @@ bot.dialog('/', function(session) {
         // Is a group chat
         //session.send('Group address pushed: ' + JSON.stringify(utils.saveLastGroupChannelAddress(session)));
         utils.saveLastGroupChannelAddress(session);
+        session.send(JSON.stringify(session.message.address));
     }
 
     // Check if this is a 'conversation' and if tripit was mentioned
@@ -167,10 +168,12 @@ bot.dialog('/', function(session) {
 // Create the dialog itself.
 bot.dialog('/share', [
     function (session, args) {
-        var session_address = session.message.address;
-        var user_data = session.userData;
+        //var session_address = session.message.address;
+        //var user_data = session.userData;
 
-        session.endDialog(args.data);
+        // args.data = Trip id
+        //session.endDialog(args.data);
+        var tripit_id = args.data;
         /*
         session.send('Current session address: ' + sess);
         session.endDialog("userData saved: " + JSON.stringify(utils.getLastGroupChannelAddress(session))); //args.data);
@@ -178,8 +181,8 @@ bot.dialog('/share', [
         //session.endDialog('userData: ' + JSON.stringify(session.userData.lastGroupChannelAddresses));
         //session.endDialog('Session: ' + JSON.stringify(session));
 
-        /*
-        tripit.getTrip(user_data.tripit_auth.tripit_token, user_data.tripit_auth.tripit_tokenSecret, notification.tripit_id)
+
+        tripit.getTrip(user_data.tripit_auth.tripit_token, user_data.tripit_auth.tripit_tokenSecret, tripit_id)
             .then((_trip) => {
                 // Construct message to send to the channel
 
@@ -191,9 +194,9 @@ bot.dialog('/share', [
                 var trip = JSON.parse(_trip);
 
                 var card = new builder.ThumbnailCard()
-                    .title('TripIt Alert')
+                    .title('Trip shared by @' + session.message.address.user.name)
                     .subtitle('Trip date: ' + trip.Trip.start_date)
-                    .text('Your trip to ' + trip.Trip.primary_location + ' has been ' + notification.tripit_change)
+                    .text('Trip to ' + trip.Trip.primary_location)
                     .images([
                         builder.CardImage.create(null, trip.Trip.image_url)
                     ])
@@ -201,18 +204,23 @@ bot.dialog('/share', [
                         builder.CardAction.openUrl(null, 'https://www.tripit.com/trip/show/id/' + notification.tripit_id, 'View in TripIt')
                     ]);
 
+                var address = utils.getLastGroupChannelAddress(session);
                 var msg = new builder.Message()
-                    .address(queuedMessage.address)
+                    .address(address)
                     .addAttachment(card);
                 // Send it to the channel
-                bot.send(msg);
+                //bot.send(msg);
+                session.send(msg);
                 //bot.send(JSON.stringify(message));
+                session.endDialog('Trip shared to #');
 
             })
             .catch((error) => {
-                bot.send('Error: ' + error)
+                //bot.send('Error: ' + error);
+                session.send('Error: ' + error);
+                session.endDialog();
             });
-        */
+
     }
 ]);
 
