@@ -16,6 +16,8 @@ function getParameterByName(name, url) {
 // Array of group channel addresses so that you can share info
 // to last group/channel pair
 function saveLastGroupChannelAddress(session) {
+    // Assume .isGroup is already checked prior
+
     //return 'test';
     // << Get current message's channel to compare later
     var channelId = session.message.address.channelId;
@@ -24,7 +26,7 @@ function saveLastGroupChannelAddress(session) {
     // >> If no group/channels are saved to userData yet, initialize it
     if(!session.userData.lastGroupChannelAddresses) session.userData.lastGroupChannelAddresses = [];
 
-    // >> Loop through userData to compare incoming message address
+    // >> Loop through userData to compare incoming message address and replace it
     var i = 0;
     for(var len = session.userData.lastGroupChannelAddresses; i < len; i++) {
         var groupChannelAddress = session.userData.lastGroupChannelAddresses[i];
@@ -34,6 +36,9 @@ function saveLastGroupChannelAddress(session) {
             break;
         }
     }
+
+    // No match, push this new group address
+    if(i == len) session.userData.lastGroupChannelAddresses.push(session.message.address);
 
     return JSON.stringify(session.userData.lastGroupChannelAddresses);
 }
