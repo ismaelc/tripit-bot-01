@@ -53,7 +53,7 @@ function getLastGroupChannelAddress(session) {
     // >> Loop through userData to compare incoming message address and get it
     var i = 0;
     var address = {};
-    for(var len = session.userData.lastGroupChannelAddresses; i < len; i++) {
+    for(var len = session.userData.lastGroupChannelAddresses.length; i < len; i++) {
         var groupChannelAddress = session.userData.lastGroupChannelAddresses[i];
         if((groupChannelAddress.channelId == channelId) && (groupChannelAddress.serviceUrl == serviceUrl)) {
             // Found! Replace with current message address
@@ -64,10 +64,13 @@ function getLastGroupChannelAddress(session) {
 
     //return session.userData.lastGroupChannelAddresses;
     //return 'NO';
+    /*
     return {
         'userData': session.userData.lastGroupChannelAddresses,
         'session': session.message.address
     }
+    */
+    return address;
 
 }
 
