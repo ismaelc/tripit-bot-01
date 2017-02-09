@@ -40,7 +40,7 @@ function saveLastGroupChannelAddress(session) {
     // No match, push this new group address
     if(i >= len) session.userData.lastGroupChannelAddresses.push(session.message.address);
 
-    return JSON.stringify(session.userData.lastGroupChannelAddresses);
+    return session.userData.lastGroupChannelAddresses;
 }
 
 function getLastGroupChannelAddress(session) {
