@@ -91,7 +91,8 @@ bot.dialog('/', function(session) {
                     //session.send('Click to login: ' + tripit_auth_url + 'auth/tripit?' + '&state=' + stateObjectBuffer);
                     break;
                 case 'Greet':
-                    session.send('Greet');
+                    var greetings = ['Hey','Yo','Whatup','Hiya','Yeah?','Lol','Upupdowndown'];
+                    session.send(greetings[Math.floor(Math.random() * myArray.length)];);
                     break;
                 case 'GetTrips':
                     //session.send('Get Trips');
@@ -166,8 +167,10 @@ bot.dialog('/', function(session) {
 bot.dialog('/share', [
     function (session, args) {
         var sess = JSON.stringify(session.message.address);
+        /*
         session.send('Current session address: ' + sess);
         session.endDialog("userData saved: " + JSON.stringify(utils.getLastGroupChannelAddress(session))); //args.data);
+        */
         //session.endDialog('userData: ' + JSON.stringify(session.userData.lastGroupChannelAddresses));
         //session.endDialog('Session: ' + JSON.stringify(session));
     }

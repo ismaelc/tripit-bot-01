@@ -62,14 +62,6 @@ function getLastGroupChannelAddress(session) {
         }
     }
 
-    //return session.userData.lastGroupChannelAddresses;
-    //return 'NO';
-    /*
-    return {
-        'userData': session.userData.lastGroupChannelAddresses,
-        'session': session.message.address
-    }
-    */
     return address;
 
 }
