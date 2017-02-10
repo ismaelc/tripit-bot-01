@@ -6,12 +6,13 @@ https://docs.botframework.com/en-us/node/builder/overview/
 "use strict";
 var builder = require("botbuilder");
 var botbuilder_azure = require("botbuilder-azure");
-var azure = require('azure-storage');
+//var azure = require('azure-storage');
 //var request = require('request');
 var luis = require('./luis_stub.js');
 var utils = require('./utils.js');
 //var db = require('./documentdb.js');
 var tripit = require('./tripit.js');
+var queue = require('./queue.js');
 
 var useEmulator = (process.env.NODE_ENV == 'development');
 
@@ -109,6 +110,8 @@ bot.dialog('/', function(session) {
                     //TODO: Per https://docs.botframework.com/en-us/node/builder/chat/session/#navtitle
                     // 'dangerous to use session' - advisable to use proactive message with bot.send for
                     // long running tasks
+
+                    //TODO: Skip getCreds if creds already in userData
                     tripit.getCreds(id, name, channelId, serviceUrl)
                         .then((credArr) => {
                             //session.send(JSON.stringify(credArr[0]));
@@ -157,10 +160,21 @@ bot.dialog('/', function(session) {
                     session.send('Random');
                     break;
                 case 'Debug':
-                    session.send('Debug');
+                    var message = {'message':'pogi'};
+                    queue.pushMessageQFunc(message, 'AzureWebJobsStorage','js-queue-items')
+                    .then(() => {
+                        session.send('Pushed: ' + JSON.stringify(message));
+                        session.endDialog();
+                    })
+                    .catch((error) => {
+                        session.send('Error: ' + error);
+                        session.endDialog();
+                    })
+                    //session.send('Debug');
                     break;
 
             }
+
             //session.send(response.topScoringIntent.intent);
         });
     }
@@ -176,7 +190,7 @@ bot.dialog('/share', [
         //session.endDialog(args.data);
         var tripit_id = args.data;
 
-        session.send('HELLO FROM /share: ' + tripit_id);
+        //session.send('HELLO FROM /share: ' + tripit_id);
         /*
         session.send('Current session address: ' + sess);
         session.endDialog("userData saved: " + JSON.stringify(utils.getLastGroupChannelAddress(session))); //args.data);
@@ -184,7 +198,9 @@ bot.dialog('/share', [
         //session.endDialog('userData: ' + JSON.stringify(session.userData.lastGroupChannelAddresses));
         //session.endDialog('Session: ' + JSON.stringify(session));
 
-
+        //TODO: Don't call this if there are no matching group addresses (e.g. Skype) in the first place
+        // Bug: Skype does not respond quickly and will ignore subsequent requests, until probably
+        // async call below finishes
         tripit.getTrip(user_data.tripit_auth.tripit_token, user_data.tripit_auth.tripit_tokenSecret, tripit_id)
             .then((_trip) => {
                 // Construct message to send to the channel
