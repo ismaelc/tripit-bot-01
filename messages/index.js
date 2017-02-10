@@ -164,7 +164,7 @@ bot.dialog('/', function(session) {
                         'message': 'pogi'
                     };
 
-                    queue.pushMessageQFunc(message, 'AzureWebJobsStorage','js-queue-items')
+                    queue.pushMessageQFunc(message, 'AzureWebJobsStorageQ','js-queue-items')
                     .then(() => {
                         session.send('Pushed: ' + JSON.stringify(message));
                         session.endDialog();
