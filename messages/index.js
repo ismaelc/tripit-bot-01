@@ -47,7 +47,7 @@ intents.onDefault('/default');
 //bot.dialog('/', intents);
 bot.dialog('/', function(session) {
 
-    if(session.message.address.conversation.hasOwnProperty('name') && (session.message.address.conversation.name != 'directmessage')) {
+    if (session.message.address.conversation.hasOwnProperty('name') && (session.message.address.conversation.name != 'directmessage')) {
         // Is a group chat
         //session.send('Group address pushed: ' + JSON.stringify(utils.saveLastGroupChannelAddress(session)));
         var saved = utils.saveLastGroupChannelAddress(session);
@@ -58,7 +58,7 @@ bot.dialog('/', function(session) {
     // Check if this is a 'conversation' and if tripit was mentioned
     // Ignore chat if it's in a channel/group and 'tripit' was NOT mentioned
     if ((session.message.address.conversation.hasOwnProperty('name')) && (session.message.text.toLowerCase().indexOf('tripit') == -1)) {
-    //if ((typeof session.message.address.conversation.name !== 'undefined') && (session.message.text.toLowerCase().indexOf('tripit') == -1)) {
+        //if ((typeof session.message.address.conversation.name !== 'undefined') && (session.message.text.toLowerCase().indexOf('tripit') == -1)) {
         //session.send('Match')
         //console.log('<Chat ignored>: ' + JSON.stringify(session.message.address.conversation));
         session.endDialog();
@@ -95,7 +95,7 @@ bot.dialog('/', function(session) {
                     //session.send('Click to login: ' + tripit_auth_url + 'auth/tripit?' + '&state=' + stateObjectBuffer);
                     break;
                 case 'Greet':
-                    var greetings = ['Hey','Yo','Whatup','Hiya','Yeah?','Lol','Upupdowndown','Bonjour','Hola','Guten tag','Ciao','Kamusta','Namaste'];
+                    var greetings = ['Hey', 'Yo', 'Whatup', 'Hiya', 'Yeah?', 'Lol', 'Upupdowndown', 'Bonjour', 'Hola', 'Guten tag', 'Ciao', 'Kamusta', 'Namaste'];
                     session.send(greetings[Math.floor(Math.random() * greetings.length)]);
                     break;
                 case 'GetTrips':
@@ -160,8 +160,10 @@ bot.dialog('/', function(session) {
                     session.send('Random');
                     break;
                 case 'Debug':
-                    var message = {'message':'pogi'};
-                    /*
+                    var message = {
+                        'message': 'pogi'
+                    };
+
                     queue.pushMessageQFunc(message, 'AzureWebJobsStorage','js-queue-items')
                     .then(() => {
                         session.send('Pushed: ' + JSON.stringify(message));
@@ -171,8 +173,8 @@ bot.dialog('/', function(session) {
                         session.send('Error: ' + error);
                         session.endDialog();
                     })
-                    */
-                    session.send('Debug');
+
+                    //session.send('Debug');
                     break;
 
             }
@@ -184,7 +186,7 @@ bot.dialog('/', function(session) {
 
 // Create the dialog itself.
 bot.dialog('/share', [
-    function (session, args) {
+    function(session, args) {
         //var session_address = session.message.address;
         var user_data = session.userData;
 
@@ -260,10 +262,9 @@ bot.on('trigger', function(message) {
     var payload = JSON.parse(queuedMessage.text);
 
     //TODO: Standardize on payload format coming from queue trigger
-    if(payload.action == 'share') { // Not used at the moment
+    if (payload.action == 'share') { // Not used at the moment
 
-    }
-    else if (payload.notification) {
+    } else if (payload.notification) {
         var auth = payload.auth;
         var notification = payload.notification;
 
