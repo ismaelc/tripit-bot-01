@@ -175,6 +175,8 @@ bot.dialog('/share', [
         // args.data = Trip id
         //session.endDialog(args.data);
         var tripit_id = args.data;
+
+        session.send('HELLO FROM /share');
         /*
         session.send('Current session address: ' + sess);
         session.endDialog("userData saved: " + JSON.stringify(utils.getLastGroupChannelAddress(session))); //args.data);
