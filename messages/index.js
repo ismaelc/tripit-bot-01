@@ -164,13 +164,19 @@ bot.dialog('/', function(session) {
                         'message': 'pogi'
                     };
 
-                    queue.pushMessageQFunc(message, 'AzureWebJobsStorage','js-queue-items')
+                    /*
+                    queue.pushMessageQFunc(message, 'AzureWebJobsStorageQ','js-queue-items')
                     .then(() => {
                         session.send('Pushed: ' + JSON.stringify(message));
                         session.endDialog();
                     })
                     .catch((error) => {
                         session.send('Error: ' + error);
+                        session.endDialog();
+                    })
+                    */
+                    queue.pushMessageQ(message, 'AzureWebJobsStorageQ','js-queue-items', function(err, response) {
+                        session.send('Response: ' + response);
                         session.endDialog();
                     })
 
