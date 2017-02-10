@@ -107,3 +107,4 @@ function pushMessage(queuedMessage, callback) {
 
 exports.pushMessage = pushMessage;
 exports.pushMessageFunc = pushMessageFunc;
+exports.pushMessageQFunc = pushMessageQFunc;
