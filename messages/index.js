@@ -161,10 +161,9 @@ bot.dialog('/', function(session) {
                     break;
                 case 'Debug':
                     var message = {
-                        'message': 'pogi'
+                        'message': 'FUNC'
                     };
 
-                    /*
                     queue.pushMessageQFunc(message, 'AzureWebJobsStorageQ','js-queue-items')
                     .then(() => {
                         session.send('Pushed: ' + JSON.stringify(message));
@@ -174,11 +173,13 @@ bot.dialog('/', function(session) {
                         session.send('Error: ' + error);
                         session.endDialog();
                     })
-                    */
+
+                    /*
                     queue.pushMessageQ(message, 'AzureWebJobsStorageQ','js-queue-items', function(err, response) {
                         session.send('Response: ' + response);
                         session.endDialog();
                     })
+                    */
 
                     //session.send('Debug');
                     break;
