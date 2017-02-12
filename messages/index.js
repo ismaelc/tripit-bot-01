@@ -164,15 +164,15 @@ bot.dialog('/', function(session) {
                         'message': 'FUNC'
                     };
 
-                    queue.pushMessageQFunc(message, 'AzureWebJobsStorageQ','js-queue-items')
-                    .then(() => {
-                        session.send('Pushed: ' + JSON.stringify(message));
-                        session.endDialog();
-                    })
-                    .catch((error) => {
-                        session.send('Error: ' + error);
-                        session.endDialog();
-                    })
+                    queue.pushMessageQFunc(message, 'AzureWebJobsStorageQ', 'js-queue-items')
+                        .then(() => {
+                            session.send('Pushed: ' + JSON.stringify(message));
+                            session.endDialog();
+                        })
+                        .catch((error) => {
+                            session.send('Error: ' + error);
+                            session.endDialog();
+                        })
 
                     /*
                     queue.pushMessageQ(message, 'AzureWebJobsStorageQ','js-queue-items', function(err, response) {
@@ -256,11 +256,135 @@ bot.dialog('/share', [
 
 bot.beginDialogAction('share', '/share');
 
-// Intercept trigger event (ActivityTypes.Trigger)
 bot.on('trigger', function(message) {
     //console.log('Triggered');
     // Handle message from trigger function
     var queuedMessage = message.value;
+    var address = queuedMessage.address;
+    var payload = JSON.parse(queuedMessage.text); // will have .origin and .intent
+
+    // Becomes a PM to Slack when .conversation is removed
+    if (queuedMessage.address.channelId != 'webchat') delete queuedMessage.address.conversation;
+
+    // TODO: Test on login when these params are missing
+
+    switch (payload.origin) {
+        case 'tripit':
+            if (payload.intent == 'trip_update') {
+
+            }
+            break;
+        default:
+            var reply = new builder.Message()
+                .address(queuedMessage.address)
+                //.text('This is coming from the trigger: ' + JSON.stringify(message));
+                .text('You\'re logged in!');
+
+            // Send it to the channel
+            bot.send(reply);
+            break;
+    }
+
+    //TODO: Standardize on payload format coming from queue trigger
+    // 'payload' is JSON-parsed .text
+    /*
+    if (payload.action == 'share') { // Not used at the moment
+
+    }
+    // Notification from TripIt
+    else if (payload.notification) {
+        var auth = payload.auth;
+        var notification = payload.notification;
+
+        //bot.send('Notification: ' + JSON.stringify(notification));
+
+        tripit.getTrip(auth.tripit_token, auth.tripit_tokenSecret, notification.tripit_id)
+            .then((_trip) => {
+                // Construct message to send to the channel
+
+                //var reply = new builder.Message()
+                //    .address(queuedMessage.address)
+                //    .text('This is coming from the trigger: ' + JSON.stringify(trip));
+
+
+                //var reply = new builder.Message()
+                //    .address(queuedMessage.address)
+                //    .text('Payload: ' + JSON.stringify(trip));
+
+                // Send it to the channel
+                //bot.send(reply);
+
+                var trip = JSON.parse(_trip);
+
+                var card = new builder.ThumbnailCard()
+                    .title('TripIt Alert')
+                    .subtitle('Trip date: ' + trip.Trip.start_date)
+                    .text('Your trip to ' + trip.Trip.primary_location + ' has been ' + notification.tripit_change)
+                    .images([
+                        builder.CardImage.create(null, trip.Trip.image_url)
+                    ])
+                    .buttons([
+                        builder.CardAction.openUrl(null, 'https://www.tripit.com/trip/show/id/' + notification.tripit_id, 'View in TripIt')
+                    ]);
+
+                var msg = new builder.Message()
+                    .address(queuedMessage.address)
+                    .addAttachment(card);
+                // Send it to the channel
+                bot.send(msg);
+                //bot.send(JSON.stringify(message));
+
+            })
+            .catch((error) => {
+                bot.send('Error: ' + error)
+            });
+
+        // Below means we're getting notification from TripIt Webhook function
+        // .. and not internally e.g. login
+
+    } else {
+        // TODO: For some reason login confirmation bot reply is not send on widgets
+        var reply = new builder.Message()
+            .address(queuedMessage.address)
+            //.text('This is coming from the trigger: ' + JSON.stringify(message));
+            .text('You\'re logged in!');
+
+        // Send it to the channel
+        bot.send(reply);
+    }
+    */
+
+    // Construct message to send to the channel
+
+    /*
+    var reply = new builder.Message()
+        .address(queuedMessage.address)
+        .text('This is coming from the trigger: ' + payload.notification);
+
+    // Send it to the channel
+    bot.send(reply);
+    */
+
+    /* Was testing to see if this will work, nope it didn't
+    bot.beginDialog(reply, 'fromTrigger', null, (err) => {
+        if (err) {
+            // error ocurred while starting new conversation. Channel not supported?
+            bot.send(new builder.Message()
+                .text('This channel does not support this operation: ' + err.message)
+                .address(queuedMessage.address));
+        }
+    });
+    */
+
+});
+
+// Intercept trigger event (ActivityTypes.Trigger)
+bot.on('x_trigger', function(message) {
+    //console.log('Triggered');
+    // Handle message from trigger function
+    var queuedMessage = message.value;
+    // queuedMessage.address
+    // queuedMessage.text (string)
 
     // Becomes a PM to Slack when .conversation is removed
     if (queuedMessage.address.channelId != 'webchat') delete queuedMessage.address.conversation;
@@ -269,9 +393,12 @@ bot.on('trigger', function(message) {
     var payload = JSON.parse(queuedMessage.text);
 
     //TODO: Standardize on payload format coming from queue trigger
+    // 'payload' is JSON-parsed .text
     if (payload.action == 'share') { // Not used at the moment
 
-    } else if (payload.notification) {
+    }
+    // Notification from TripIt
+    else if (payload.notification) {
         var auth = payload.auth;
         var notification = payload.notification;
 
