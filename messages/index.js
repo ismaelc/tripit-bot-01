@@ -271,7 +271,13 @@ bot.on('trigger', function(message) {
     switch (payload.origin) {
         case 'tripit':
             if (payload.intent == 'trip_update') {
+                var reply = new builder.Message()
+                    .address(queuedMessage.address)
+                    //.text('This is coming from the trigger: ' + JSON.stringify(message));
+                    .text('HEY');
 
+                // Send it to the channel
+                bot.send(reply);
             }
             break;
         default:
