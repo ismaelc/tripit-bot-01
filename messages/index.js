@@ -278,7 +278,7 @@ bot.on('trigger', function(message) {
             var reply = new builder.Message()
                 .address(queuedMessage.address)
                 //.text('This is coming from the trigger: ' + JSON.stringify(message));
-                .text('You\'re logged in!');
+                .text('TEST');
 
             // Send it to the channel
             bot.send(reply);
