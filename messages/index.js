@@ -161,7 +161,7 @@ bot.dialog('/', function(session) {
                     break;
                 case 'Debug':
                     var message = {
-                        'message': 'FUNC'
+                        'message': 'FUNC01'
                     };
 
                     queue.pushMessageQFunc(message, 'AzureWebJobsStorageQ', 'js-queue-items')
@@ -272,6 +272,27 @@ bot.on('trigger', function(message) {
         case 'tripit':
             if (payload.intent == 'trip_update') {
 
+                var trip = payload.trip;
+                
+                var card = new builder.ThumbnailCard()
+                    .title('TripIt Alert')
+                    .subtitle('Trip date: ' + trip.Trip.start_date)
+                    .text('Your trip to ' + trip.Trip.primary_location + ' has been ' + notification.tripit_change)
+                    .images([
+                        builder.CardImage.create(null, trip.Trip.image_url)
+                    ])
+                    .buttons([
+                        builder.CardAction.openUrl(null, 'https://www.tripit.com/trip/show/id/' + notification.tripit_id, 'View in TripIt')
+                    ]);
+
+                var msg = new builder.Message()
+                    .address(queuedMessage.address)
+                    .addAttachment(card);
+                // Send it to the channel
+                bot.send(msg);
+                //bot.send(JSON.stringify(message));
+
+                /*
                 var auth = payload.auth;
                 var notification = payload.notification;
 
@@ -305,6 +326,7 @@ bot.on('trigger', function(message) {
                     .catch((error) => {
                         bot.send('Error: ' + error)
                     });
+                */
 
                 /*
                 var reply = new builder.Message()
