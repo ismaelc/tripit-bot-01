@@ -264,25 +264,62 @@ bot.on('trigger', function(message) {
     var payload = JSON.parse(queuedMessage.text); // will have .origin and .intent
 
     // Becomes a PM to Slack when .conversation is removed
-    if (queuedMessage.address.channelId != 'webchat') delete queuedMessage.address.conversation;
+    if (address.channelId != 'webchat') delete address.conversation;
 
     // TODO: Test on login when these params are missing
 
     switch (payload.origin) {
         case 'tripit':
             if (payload.intent == 'trip_update') {
+
+                var auth = payload.auth;
+                var notification = payload.notification;
+
+                //bot.send('Notification: ' + JSON.stringify(notification));
+
+                tripit.getTrip(auth.tripit_token, auth.tripit_tokenSecret, notification.tripit_id)
+                    .then((_trip) => {
+                        // Construct message to send to the channel
+
+                        var trip = JSON.parse(_trip);
+
+                        var card = new builder.ThumbnailCard()
+                            .title('TripIt Alert')
+                            .subtitle('Trip date: ' + trip.Trip.start_date)
+                            .text('Your trip to ' + trip.Trip.primary_location + ' has been ' + notification.tripit_change)
+                            .images([
+                                builder.CardImage.create(null, trip.Trip.image_url)
+                            ])
+                            .buttons([
+                                builder.CardAction.openUrl(null, 'https://www.tripit.com/trip/show/id/' + notification.tripit_id, 'View in TripIt')
+                            ]);
+
+                        var msg = new builder.Message()
+                            .address(queuedMessage.address)
+                            .addAttachment(card);
+                        // Send it to the channel
+                        bot.send(msg);
+                        //bot.send(JSON.stringify(message));
+
+                    })
+                    .catch((error) => {
+                        bot.send('Error: ' + error)
+                    });
+
+                /*
                 var reply = new builder.Message()
-                    .address(queuedMessage.address)
+                    .address(address)
                     //.text('This is coming from the trigger: ' + JSON.stringify(message));
                     .text('HEY');
 
                 // Send it to the channel
                 bot.send(reply);
+                */
             }
             break;
         default:
             var reply = new builder.Message()
-                .address(queuedMessage.address)
+                .address(address)
                 //.text('This is coming from the trigger: ' + JSON.stringify(message));
                 .text('TEST');
 
