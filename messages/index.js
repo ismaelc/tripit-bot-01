@@ -379,7 +379,7 @@ bot.on('trigger', function(message) {
 
             if(payload.intent == 'trip_list') {
 
-                var trips = JSON.parse(payload.trips.Trip);
+                var trips = JSON.parse(payload.trips).Trip;
 
                 var reply = new builder.Message()
                     .address(address)
