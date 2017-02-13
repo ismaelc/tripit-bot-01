@@ -118,6 +118,40 @@ bot.dialog('/', function(session) {
                             session.userData.tripit_auth = credArr[0].tripit_auth;
                         })
                         .then(() => {
+
+                            var payload = {
+                                'origin': 'bot',
+                                'intent': 'trip_list',
+                                'tripit_auth': session.userData.tripit_auth
+                            };
+
+                            var message = {
+                                'address': address,
+                                'payload': payload
+                            }
+
+                            queue.pushMessageQFunc(message, 'AzureWebJobsStorageQ', 'js-queue-items')
+                                .then(() => {
+                                    /*
+                                    session.send('Pushed: ' + JSON.stringify(message));
+                                    session.endDialog();
+                                    */
+                                    //context.done(null, 'Http trigger done');
+                                    console.log('List request queue message push');
+                                    session.endDialog();
+                                })
+                                .catch((error) => {
+                                    /*
+                                    session.send('Error: ' + error);
+                                    session.endDialog();
+                                    */
+                                    //context.done(error, null);
+                                    console.log('Error list request queue push: ' + error);
+                                    session.endDialog();
+                                })
+                        })
+                        /*
+                        .then(() => {
                             return tripit.listTrips(session.userData.tripit_auth.tripit_token, session.userData.tripit_auth.tripit_tokenSecret);
                         })
                         .then((listArr) => {
@@ -150,9 +184,11 @@ bot.dialog('/', function(session) {
 
                             //session.send('Trips: ' + trips);
                         })
+                        */
                         .catch((error) => {
                             session.send(JSON.stringify(error));
                         });
+
 
                     //session.send('Address: ' + id + ' ' + name + ' ' + channelId + ' ' + serviceUrl);
                     break;
@@ -337,6 +373,38 @@ bot.on('trigger', function(message) {
                 // Send it to the channel
                 bot.send(reply);
                 */
+            }
+            break;
+        case 'bot':
+            if(payload.intent == 'trip_list') {
+                var trips = payload.trips.Trip;
+                var cards = [];
+                for (var i = 0, len = trips.length; i < len; i++) {
+                    var card = new builder.ThumbnailCard(session)
+                        .title('Trip name: ' + trips[i].display_name)
+                        .subtitle(trips[i].start_date + ' - ' + trips[i].primary_location) //trips[i].start_date + ' - ' + trips[i].primary_location)
+                        .text('Your trip to ' + trips[i].primary_location + ' from ' + trips[i].start_date + ' to ' + trips[i].end_date) //+ trips[i].primary_location + ' from ' + trips[i].start_date + ' to ' + trips[i].end_date)
+                        .images([
+                            builder.CardImage.create(null, trips[i].image_url) //trips[i].image_url)
+                        ])
+                        .buttons([
+                            builder.CardAction.openUrl(null, 'https://www.tripit.com/trip/show/id/' + trips[i].id, 'View in TripIt'),
+                            //builder.CardAction.openUrl(session, 'https://www.tripit.com/trip/show/id/' + trips[i].id, 'Share Trip')
+                            builder.CardAction.dialogAction(null, "share", trips[i].id, "Share trip")
+                            //builder.CardAction.imBack(session, "<Message>", "<Button>")
+
+                        ]);
+                    cards.push(card);
+                }
+
+                // create reply with Carousel AttachmentLayout
+                var message = new builder.Message()
+                    .address(queuedMessage.address)
+                    .attachmentLayout(builder.AttachmentLayout.carousel)
+                    .attachments(cards);
+
+                //session.send(reply);
+                bot.send(message);
             }
             break;
         default:
