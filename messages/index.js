@@ -381,6 +381,7 @@ bot.on('trigger', function(message) {
 
                 var trips = JSON.parse(payload.trips).Trip;
 
+                /*
                 var reply = new builder.Message()
                     .address(address)
                     //.text('This is coming from the trigger: ' + JSON.stringify(message));
@@ -388,8 +389,7 @@ bot.on('trigger', function(message) {
 
                 // Send it to the channel
                 bot.send(reply);
-
-                /*
+                */
 
                 var cards = [];
                 for (var i = 0, len = trips.length; i < len; i++) {
@@ -418,7 +418,6 @@ bot.on('trigger', function(message) {
 
                 //session.send(reply);
                 bot.send(message);
-                */
             }
 
             break;
