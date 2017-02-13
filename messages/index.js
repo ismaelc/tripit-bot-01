@@ -412,7 +412,7 @@ bot.on('trigger', function(message) {
 
                 // create reply with Carousel AttachmentLayout
                 var message = new builder.Message()
-                    .address(queuedMessage.address)
+                    .address(address)
                     .attachmentLayout(builder.AttachmentLayout.carousel)
                     .attachments(cards);
 
