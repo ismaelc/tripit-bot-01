@@ -186,7 +186,7 @@ bot.dialog('/', function(session) {
                         })
                         */
                         .catch((error) => {
-                            session.send(JSON.stringify(error));
+                            session.send('Error: ' + JSON.stringify(error));
                         });
 
 
@@ -376,6 +376,15 @@ bot.on('trigger', function(message) {
             }
             break;
         case 'bot':
+
+            var reply = new builder.Message()
+                .address(address)
+                //.text('This is coming from the trigger: ' + JSON.stringify(message));
+                .text('FROM BOT');
+
+            // Send it to the channel
+            bot.send(reply);
+            /*
             if(payload.intent == 'trip_list') {
                 var trips = payload.trips.Trip;
                 var cards = [];
@@ -406,6 +415,7 @@ bot.on('trigger', function(message) {
                 //session.send(reply);
                 bot.send(message);
             }
+            */
             break;
         default:
             var reply = new builder.Message()
