@@ -379,16 +379,18 @@ bot.on('trigger', function(message) {
 
             if(payload.intent == 'trip_list') {
 
+                var trips = payload.trips.Trip;
+
                 var reply = new builder.Message()
                     .address(address)
                     //.text('This is coming from the trigger: ' + JSON.stringify(message));
-                    .text('FROM BOT');
+                    .text('Trips: '  + JSON.stringify(trips));
 
                 // Send it to the channel
                 bot.send(reply);
 
                 /*
-                var trips = payload.trips.Trip;
+
                 var cards = [];
                 for (var i = 0, len = trips.length; i < len; i++) {
                     var card = new builder.ThumbnailCard(session)
