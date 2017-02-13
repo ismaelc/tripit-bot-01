@@ -117,6 +117,7 @@ bot.dialog('/', function(session) {
                             //session.send(JSON.stringify(credArr[0]));
                             session.userData.tripit_auth = credArr[0].tripit_auth;
                         })
+                        /* TOO SLOW, better off to call TripIt APIs here from bot
                         .then(() => {
 
                             var payload = {
@@ -132,25 +133,17 @@ bot.dialog('/', function(session) {
 
                             queue.pushMessageQFunc(message, 'AzureWebJobsStorageQ', 'js-queue-items')
                                 .then(() => {
-                                    /*
-                                    session.send('Pushed: ' + JSON.stringify(message));
-                                    session.endDialog();
-                                    */
-                                    //context.done(null, 'Http trigger done');
                                     console.log('List request queue message push');
                                     session.endDialog();
                                 })
                                 .catch((error) => {
-                                    /*
-                                    session.send('Error: ' + error);
-                                    session.endDialog();
-                                    */
+
                                     //context.done(error, null);
                                     console.log('Error list request queue push: ' + error);
                                     session.endDialog();
                                 })
                         })
-                        /*
+                        */
                         .then(() => {
                             return tripit.listTrips(session.userData.tripit_auth.tripit_token, session.userData.tripit_auth.tripit_tokenSecret);
                         })
@@ -184,7 +177,6 @@ bot.dialog('/', function(session) {
 
                             //session.send('Trips: ' + trips);
                         })
-                        */
                         .catch((error) => {
                             session.send('Error: ' + JSON.stringify(error));
                         });
@@ -377,6 +369,7 @@ bot.on('trigger', function(message) {
             break;
         case 'bot':
 
+            // TOO SLOW, not used at the moment
             if(payload.intent == 'trip_list') {
 
                 var trips = JSON.parse(payload.trips).Trip;
