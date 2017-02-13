@@ -277,12 +277,12 @@ bot.on('trigger', function(message) {
                 var card = new builder.ThumbnailCard()
                     .title('TripIt Alert')
                     .subtitle('Trip date: ' + trip.Trip.start_date)
-                    .text('Your trip to ' + trip.Trip.primary_location + ' has been ')// + notification.tripit_change)
+                    .text('Your trip to ' + trip.Trip.primary_location + ' has been ' + trip.Trip.tripit_change)
                     .images([
                         builder.CardImage.create(null, trip.Trip.image_url)
                     ])
                     .buttons([
-                        builder.CardAction.openUrl(null, 'https://www.tripit.com/trip/show/id/')// + notification.tripit_id, 'View in TripIt')
+                        builder.CardAction.openUrl(null, 'https://www.tripit.com/trip/show/id/' + trip.Trip.id, 'View in TripIt')
                     ]);
 
                 var msg = new builder.Message()
