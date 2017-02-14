@@ -117,7 +117,7 @@ bot.dialog('/', function(session) {
                             //session.send(JSON.stringify(credArr[0]));
                             session.userData.tripit_auth = credArr[0].tripit_auth;
                         })
-                        /* TOO SLOW, better off to call TripIt APIs here from bot */
+                        /* TOO SLOW, better off to call TripIt APIs here from bot, even if queues are warmed up
                         .then(() => {
 
                             var payload = {
@@ -143,7 +143,7 @@ bot.dialog('/', function(session) {
                                     session.endDialog();
                                 })
                         })
-                        /*
+                        */
                         .then(() => {
                             return tripit.listTrips(session.userData.tripit_auth.tripit_token, session.userData.tripit_auth.tripit_tokenSecret);
                         })
@@ -177,7 +177,6 @@ bot.dialog('/', function(session) {
 
                             //session.send('Trips: ' + trips);
                         })
-                        */
                         .catch((error) => {
                             session.send('Error: ' + JSON.stringify(error));
                         });
