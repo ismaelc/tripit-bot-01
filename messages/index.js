@@ -75,6 +75,7 @@ bot.dialog('/', function(session) {
         // Figure out what the user is trying to say
         luis.getIntent(session.message.text, function(err, response) {
             var intent = response.topScoringIntent.intent;
+            var entities = response.entities;
 
             switch (intent) {
                 case 'Login':
